@@ -49,7 +49,7 @@ public class ServoPickupTest extends LinearOpMode {
         robot.servoLeft.setPosition(1.0);
         robot.servoRight.setPosition(1.0);
         
-        sleep(3);
+        sleep(3000);
         
         // Stop CR servo by setting to 0.5
         robot.servoLeft.setPosition(0.5);
