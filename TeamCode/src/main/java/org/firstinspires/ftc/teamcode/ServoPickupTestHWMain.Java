@@ -1,10 +1,3 @@
-package org.firstinspires.ftc.teamcode;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-// import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,13 +22,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo:          Grab stone server:     "stone_servo"
  */
 
-public class ServoTestHWMain {
+public class ServoPickupTestHWMain {
 
     /* Public OpMode members. */
-    public Servo            servoTest;
-    public BNO055IMU        imu;
-
-    public static final double servoTestInitPosition = 0.8;
+    public Servo            servoLeft;
+    public Servo            servoRight;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -52,19 +43,8 @@ public class ServoTestHWMain {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Gyro onboard Rev Hub
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
         // Define and initialize ALL installed servos.
-        servoTest = hwMap.servo.get("test_servo");
-        servoTest.setPosition(servoTestInitPosition);
+        servoTest = hwMap.servo.get("Left_servo");
+        servoTest = hwMap.servo.get("Right_servo");
     }
 }
