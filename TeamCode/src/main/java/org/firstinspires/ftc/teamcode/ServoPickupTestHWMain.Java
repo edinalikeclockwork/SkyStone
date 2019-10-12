@@ -44,7 +44,7 @@ public class ServoPickupTestHWMain {
         hwMap = ahwMap;
 
         // Define and initialize ALL installed servos.
-        servoTest = hwMap.servo.get("Left_servo");
-        servoTest = hwMap.servo.get("Right_servo");
+        servoLeft = hwMap.servo.get("left_servo");
+        servoRight = hwMap.servo.get("right_servo");
     }
 }
