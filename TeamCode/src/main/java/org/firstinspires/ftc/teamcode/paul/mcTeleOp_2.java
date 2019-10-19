@@ -53,7 +53,44 @@ public class McTeleop_1 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-// ADD DRIVE CODE HERE
+        /*
+            ** McTeleop_1 joystick controls
+
+            // Setup a variable for each drive wheel to save power level for telemetry
+            //Forward/Backward
+            robot.lf.setPower(gamepad1.left_stick_y);
+            robot.lr.setPower(gamepad1.left_stick_y);
+            robot.rf.setPower(gamepad1.right_stick_y);
+            robot.rr.setPower(gamepad1.right_stick_y);
+
+            //Left
+            robot.lf.setPower(gamepad1.left_trigger);
+            robot.lr.setPower(-gamepad1.left_trigger);
+            robot.rf.setPower(-gamepad1.left_trigger);
+            robot.rr.setPower(gamepad1.left_trigger);
+            //Right
+            robot.lf.setPower(-gamepad1.right_trigger);
+            robot.lr.setPower(gamepad1.right_trigger);
+            robot.rf.setPower(gamepad1.right_trigger);
+            robot.rr.setPower(-gamepad1.right_trigger);
+        */
+
+            final double x = Math.pow(gamepad1.left_stick_x, 3.0);
+            final double y = Math.pow(-gamepad1.left_stick_y, 3.0);
+
+            final double rotation = Math.pow(-gamepad1.right_stick_y, 3.0);
+            final double direction = Math.atan2(x, y);
+            final double speed = Math.min(1.0, Math.sqrt(x * x + y * y));
+
+            final double lf_power = speed * Math.sin(direction + Math.PI / 4.0) + rotation;
+            final double rf_power = speed * Math.cos(direction + Math.PI / 4.0) - rotation;
+            final double lr_power = speed * Math.cos(direction + Math.PI / 4.0) + rotation;
+            final double rr_power = speed * Math.sin(direction + Math.PI / 4.0) - rotation;
+
+            robot.lf.setPower(-lf_power * powerMultipler);
+            robot.rf.setPower(-rf_power * powerMultipler);
+            robot.lr.setPower(-lr_power * powerMultipler);
+            robot.rr.setPower(-rr_power * powerMultipler);
 
             // Show the elapsed game time and wheel power.
            /* telemetry.addData("Status", "Run Time: " + runtime].toString());
