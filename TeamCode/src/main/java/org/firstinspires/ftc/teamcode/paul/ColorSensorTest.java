@@ -18,8 +18,8 @@ import android.graphics.Color;
 //@Disabled
 public class ColorSensorTest extends LinearOpMode {
 
-    public DigitalChannel digitalTouch;
-    public DistanceSensor distanceSensor;
+    //public DigitalChannel digitalTouch;
+    //public DistanceSensor distanceSensor;
     private ColorSensor colorSensor;
     
     private ElapsedTime runtime = new ElapsedTime();
