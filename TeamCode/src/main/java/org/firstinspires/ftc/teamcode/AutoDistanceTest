@@ -93,14 +93,9 @@ public class AutoDistanceTest extends LinearOpMode {
         // Start autonomous actions here
         // Path: Launch from Depot side
 
-        // Turn off lift motors
-        robot.leftLift.setPower(0);
-        robot.rightLift.setPower(0);
-        sleep(100);
-
         // ACTION 1:
-        // Back up 4 inches from lander (doesn't need gyro)
-        encoderDrive(DRIVE_SPEED,  -4,  -4, 2.0);  // Backwards X Inches with X Sec timeout
+        // Drive 12 inches forward
+        encoderDrive(DRIVE_SPEED, "forward", 12, 4.0);
 
         // End autonomous actions here
 
@@ -110,11 +105,14 @@ public class AutoDistanceTest extends LinearOpMode {
         sleep(500);
     }
 
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+    public void encoderDrive(double speed, String direction,
+                             double inches,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLfTarget;
+        int newRfTarget;
+        int newLrTarget;
+        int newRrTarget;
+
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -124,25 +122,33 @@ public class AutoDistanceTest extends LinearOpMode {
             telemetry.addData("Inches", leftInches);
             telemetry.addData("Tics/inch", COUNTS_PER_INCH);
             telemetry.addData("Path2",  "Running at %7d :%7d",
-                    robot.leftDrive.getCurrentPosition(),
-                    robot.rightDrive.getCurrentPosition());
+                    robot.lf.getCurrentPosition(),
+                    robot.rf.getCurrentPosition());
             telemetry.update();
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.rightDrive.setTargetPosition(newRightTarget);
+            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            newRightFrontTarget = robot.rf.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            newLeftRearTarget = robot.lf.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            newRightRearTarget = robot.rf.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            robot.lf.setTargetPosition(newLeftFrontTarget);
+            robot.rf.setTargetPosition(newRightFrontTarget);
+            robot.lf.setTargetPosition(newLeftRearTarget);
+            robot.rf.setTargetPosition(newRightRearTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
 
-            robot.leftDrive.setPower(Math.abs(speed));
-            robot.rightDrive.setPower(Math.abs(speed));
+            robot.lf.setPower(Math.abs(speed));
+            robot.rf.setPower(Math.abs(speed));
+            robot.lr.setPower(Math.abs(speed));
+            robot.rr.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -152,23 +158,28 @@ public class AutoDistanceTest extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() || robot.rightDrive.isBusy())) {
+                    (robot.lf.isBusy() || robot.rf.isBusy() ||
+                     robot.lr.isBusy() || robot.rr.isBusy() )) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());
+                        robot.lf.getCurrentPosition(),
+                        robot.rf.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            robot.leftDrive.setPower(0);
-            robot.rightDrive.setPower(0);
+            robot.lf.setPower(0);
+            robot.rf.setPower(0);
+            robot.lr.setPower(0);
+            robot.rr.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
     }
