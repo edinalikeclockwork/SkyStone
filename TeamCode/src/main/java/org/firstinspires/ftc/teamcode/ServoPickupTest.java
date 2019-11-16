@@ -15,7 +15,7 @@ public class ServoPickupTest extends LinearOpMode {
 
     /* Declare OpMode members. */
 
-    HWMainSimple robot = new HWMainSimple();
+    ServoPickupTestHWMain robot = new ServoPickupTestHWMain();
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -46,14 +46,14 @@ public class ServoPickupTest extends LinearOpMode {
         // Path: Launch from Crater side
 
         // 10-12-2019: Servo Testing
-        robot.servoLeft.setPosition(1.0);
+        robot.servoLeft.setPosition(-1.0);
         robot.servoRight.setPosition(1.0);
         
-        sleep(3000);
+        sleep(500000);
         
         // Stop CR servo by setting to 0.5
-        robot.servoLeft.setPosition(0.5);
-        robot.servoRight.setPosition(0.5);
+        //robot.servoLeft.setPosition(0.5);
+        //robot.servoRight.setPosition(0.5);
 
     }
 

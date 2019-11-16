@@ -25,24 +25,25 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo:          Lift lock servo:          "lift_lock_servo"
  * Touch:          Lift touch sensor:        "touch_sensor"
  * Color:          Color/Range sensor:       "sensorColor"
+
 09-14-2019: Added servo to test grabbing stone
- * Servo:          Grab stone server:        "test_servo"
+ * Servo:          Grab stone server:     "stone_servo"
  */
 
-public class ServoTestHWMain {
+public class HWMainSimple {
 
     /* Public OpMode members. */
-    public Servo            servoTest;
+    public Servo            stoneServo;
     public BNO055IMU        imu;
 
-    public static final double servoTestInitPosition = 0.8;
+    public static final double stoneServoInitPosition = 0.8;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ServoTestHWMain(){
+    public HWMainSimple(){
 
     }
 
@@ -64,7 +65,8 @@ public class ServoTestHWMain {
         imu.initialize(parameters);
 
         // Define and initialize ALL installed servos.
-        servoTest = hwMap.servo.get("test_servo");
-        servoTest.setPosition(servoTestInitPosition);
+        stoneServo = hwMap.servo.get("stone_servo");
+        stoneServo.setPosition(stoneServoInitPosition);
+
     }
 }

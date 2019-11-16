@@ -14,15 +14,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "ServoTest")
+@Autonomous(name = "StoneServoTest")
 
 // @Disabled
 
-public class ServoTest extends LinearOpMode {
+public class StoneServoTest extends LinearOpMode {
 
     /* Declare OpMode members. */
 
-    ServoTestHWMain robot = new ServoTestHWMain();
+    HWMainSimple robot = new HWMainSimple();
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -43,11 +43,11 @@ public class ServoTest extends LinearOpMode {
     static final double liftPower = 0.4;
     static boolean touchState = true;
     static int down = -1;   // Reverses direction of motors to lower lift
-    static boolean testServoState = true;
+    static boolean stoneServoState = true;
 
-    // 09-14-2019: Servo Testing
-    static final double testServoOpen = 0.8;
-    static final double testServoClosed = 1.0;
+    // 09-14-2019: Stone Servo Testing
+    static final double stoneServoOpen = 0.8;
+    static final double stoneServoClosed = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -89,12 +89,12 @@ public class ServoTest extends LinearOpMode {
         // Start autonomous actions here
         // Path: Launch from Crater side
 
-        // 09-14-2019: Servo Testing
-        robot.servoTest.setPosition(testServoOpen);
+// 09-14-2019: Stone Servo Testing
+        robot.stoneServo.setPosition(stoneServoOpen);
         sleep(3000);
-        robot.servoTest.setPosition(testServoClosed);
+        robot.stoneServo.setPosition(stoneServoClosed);
         sleep(3000);
-        // robot.servoTest.setPosition(testServoOpen);
+        // robot.stoneServo.setPosition(stoneServoOpen);
 
         sleep(50000);
     }
