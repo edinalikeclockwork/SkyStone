@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -19,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name = "Move Foundation Test")
 
-// @Disabled
+@Disabled
 
 public class AutoMoveFoundation extends LinearOpMode {
 
@@ -53,6 +51,8 @@ public class AutoMoveFoundation extends LinearOpMode {
 
     String direction = "";
     String direction_reverse = "";
+    int lane_distance = 0;
+    boolean move_foundation = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -122,34 +122,37 @@ public class AutoMoveFoundation extends LinearOpMode {
         *              Timeout:  decimal number in seconds
         */
 
-        // ACTION 0:
-        // Drive in a 12 inch square
-        /*
-        encoderDrive(DRIVE_SPEED, "forward", 12, 6.0);
-        sleep(1000);
-        encoderDrive(DRIVE_SPEED, "right", 12, 2.0);
-        sleep(1000);
-        encoderDrive(DRIVE_SPEED, "backward", 12, 2.0);
-        sleep(1000);
-        encoderDrive(DRIVE_SPEED, "left", 12, 2.0);
-        sleep(1000);
-        */
+        // Set direction variables based on alliance color selection during init
+        /* If Blue alliance:
+         *      - direction = forward
+         *      - reverse_direction = backward
+         * If Red alliance:
+         *      - direction = backward
+         *      - reverse_direction = forward
+         */
+        direction = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "forward": "backward";
+        direction_reverse = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "backward": "forward";
+        // Set variable base on init selection controlling if foundation gets moved or not
+        move_foundation = ( reposition == AutonomousConfiguration.Reposition.No ) ? true : false;
 
+/* ********************************** *
+ *   Autonomous Actions: Build Side   *
+ * ********************************** */
+
+    if ( move_foundation ) {
         // ACTION 1:
-        // Drive: Start moving to foundation (16)
+        // Drive: Start moving to foundation
         encoderDrive(DRIVE_SPEED, "right", 16, 3.5);
         sleep(100);
 
         // ACTION 2:
-        // Drive: Center on foundation (11)
-        direction = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "forward": "backward";
-        direction_reverse = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "backward": "forward";
-        encoderDrive(DRIVE_SPEED, direction, 11, 3);
+        // Drive: Center on foundation
+        encoderDrive(DRIVE_SPEED, direction, 11, 5);
         sleep(100);
 
         // ACTION 3:
-        // Drive: Drive to foundation (16.5)
-        encoderDrive(DRIVE_SPEED, "right", 17, 4);
+        // Drive: Drive to foundation
+        encoderDrive(DRIVE_SPEED, "right", 19.5, 6);
         sleep(250);
 
         // ACTION 4:
@@ -158,8 +161,8 @@ public class AutoMoveFoundation extends LinearOpMode {
         sleep(500); // Delay long enough for latch to go down
 
         // ACTION 5:
-        // Drive: Pull foundation to wall (36)
-        encoderDrive(MOVE_FOUNDATION_SPEED, "left", 43, 9);
+        // Drive: Pull foundation to wall
+        encoderDrive(MOVE_FOUNDATION_SPEED, "left", 45, 9);
         sleep(100);
 
         // ACTION 6:
@@ -168,20 +171,21 @@ public class AutoMoveFoundation extends LinearOpMode {
         sleep(100);
 
         // ACTION 7:
-        // Drive: Park on line under bridge (24)
+        // Drive: Park on line under bridge
         encoderDrive(DRIVE_SPEED, direction_reverse, 30, 5);
         sleep(100);
 
-        // ACTION 7a:
-        // Drive: Move right to lane 2 (further from wall) (6)
+        // ACTION 8:
+        // Drive: Align with selected lane to park in
+        lane_distance = (navigationLane == AutonomousConfiguration.NavigationLane.Outside) ? 3 : 25;
+        encoderDrive(DRIVE_SPEED, "right", lane_distance, 2);
         //encoderDrive(DRIVE_SPEED, "right", 2, 2); //park outside lane
-        encoderDrive(DRIVE_SPEED, "right", 25, 2); //park inside lane
-
+        //encoderDrive(DRIVE_SPEED, "right", 25, 2); //park inside lane
         sleep(100);
 
-        // ACTION 7b:
-        // Drive: Park on line in lane 2 (32)
-        encoderDrive(DRIVE_SPEED, direction_reverse, 24, 5);
+        // ACTION 9:
+        // Drive: Park on line in lane 2
+        encoderDrive(DRIVE_SPEED, direction_reverse, 22, 5);
         sleep(100);
 
         // End autonomous actions here
@@ -190,6 +194,20 @@ public class AutoMoveFoundation extends LinearOpMode {
         telemetry.update();
 
         sleep(2000);
+    } else {
+        // Do not move foundation, only park in selected lane
+
+        // ACTION 1:
+        // Drive: Align with selected lane to park in
+        lane_distance = (navigationLane == AutonomousConfiguration.NavigationLane.Inside) ? 3 : 25;
+        encoderDrive(DRIVE_SPEED, "right", lane_distance, 6);
+        sleep(100);
+
+        // ACTION 2:
+        // Drive: Park on line under bridge
+        encoderDrive(DRIVE_SPEED, direction_reverse, 39, 9);
+        sleep(100);
+    }
     }
 
     public void encoderDrive(double speed, String direction,
@@ -318,7 +336,8 @@ public class AutoMoveFoundation extends LinearOpMode {
 
     private void GetAutonomousConfigurationOptions() {
         // Get configuration selections from the driver using gamepad1.
-        autoConfig = new AutonomousConfiguration(gamepad1, telemetry);
+        autoConfig = new AutonomousConfiguration(gamepad2, telemetry, this);
+//orig:        autoConfig = new AutonomousConfiguration(gamepad2, telemetry);
         autoConfig.ShowMenu();
 
         // Save the driver selections for use in your autonomous strategy.
@@ -327,11 +346,13 @@ public class AutoMoveFoundation extends LinearOpMode {
         reposition = autoConfig.getReposition();
 
         telemetry.clear();
-        telemetry.addData("Alliance", alliance);
+        telemetry.addData("You have Selected ", "");
+        telemetry.addData("", "");
+        telemetry.addData("Alliance Color ", alliance);
         //telemetry.addData("Start position", startPosition);
-        telemetry.addData("Navigation Lane", navigationLane);
+        telemetry.addData("Parking Lane ", navigationLane);
         //telemetry.addData("Deliver", deliver);
-        telemetry.addData("Reposition", reposition);
+        telemetry.addData("Move Foundation ", reposition);
         telemetry.update();
     }
 
