@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name = "Move Block Test")
 
-// @Disabled
+@Disabled
 
 public class AutoMoveBlock extends LinearOpMode {
 
@@ -25,7 +25,6 @@ public class AutoMoveBlock extends LinearOpMode {
 
     //McDriveTest_HW robot = new McDriveTest_HW();
     private BertTestHWMain robot = new BertTestHWMain();
-
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -40,6 +39,20 @@ public class AutoMoveBlock extends LinearOpMode {
     static final double MOVE_FOUNDATION_SPEED = 0.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                           (WHEEL_DIAMETER_INCHES * 3.14159);
+
+    // This the configuration class used to get the driver's selections.
+    private AutonomousConfiguration autoConfig;
+    // The properties are available after the
+    // call to the ShowMenu method of the AutonomousConfiguration class.
+    private AutonomousConfiguration.AllianceColor alliance;
+    private AutonomousConfiguration.NavigationLane navigationLane;
+    private AutonomousConfiguration.Reposition reposition;
+
+    String direction = "";
+    String direction_reverse = "";
+    int lane_distance = 0;
+    boolean park_only = false;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -89,9 +102,11 @@ public class AutoMoveBlock extends LinearOpMode {
             idle();
         }
         **/
+
         telemetry.addData("Mode", "waiting for start");
-        // telemetry.addData("imu calib status", robot.imu.getCalibrationStatus().toString());
         telemetry.update();
+
+        GetAutonomousConfigurationOptions();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -106,44 +121,76 @@ public class AutoMoveBlock extends LinearOpMode {
         *              Timeout:  decimal number in seconds
         */
 
-	// 11-21-2019: TODOs
-	//  - Validate distances for each encoderDrive action
-	//  - Add AutonomousConfiguration logic similar to AutoMoveFoundation.java
+        // Set direction variables based on alliance color selection during init
+        /* If Blue alliance:
+         *      - direction = forward
+         *      - reverse_direction = backward
+         * If Red alliance:
+         *      - direction = backward
+         *      - reverse_direction = forward
+         */
+        direction = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "forward": "backward";
+        direction_reverse = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "backward": "forward";
+        park_only = ( reposition == AutonomousConfiguration.Reposition.Yes ) ? true : false;
 
-        // ACTION 1:
-        // Drive: Start moving to blocks
-        encoderDrive(DRIVE_SPEED, "left", 16, 3.5);
-        sleep(100);
+/* ********************************** *
+ *   Autonomous Actions: Loading Side *
+ * ********************************** */
 
-        // ACTION 2:
-        // Drive: Center on a block
-        encoderDrive(DRIVE_SPEED, "backward", 4, 4);
-        sleep(100);
+        if ( park_only == false ) {
+            // ACTION 1:
+            // Drive: Start moving to blocks
+            encoderDrive(DRIVE_SPEED, "left", 16, 3.5);
+            sleep(100);
 
-        // ACTION 3:
-        // Drive: Drive to block
-        encoderDrive(DRIVE_SPEED, "left", 17, 4);
-        sleep(250);
+            // ACTION 2:
+            // Drive: Center on a block
+            encoderDrive(DRIVE_SPEED, direction_reverse, 4, 4);
+            sleep(100);
 
-        // ACTION 4:
-        // Lower stone arm
-        robot.servoStoneArm.setPosition(1.0);
-        sleep(500); // Delay long enough for latch to go down
+            // ACTION 3:
+            // Drive: Drive to block
+            encoderDrive(DRIVE_SPEED, "left", 17, 4);
+            sleep(250);
 
-        // ACTION 5:
-        // Drive: Move away from blocks
-        encoderDrive(DRIVE_SPEED, "right", 12, 9);
-        sleep(100);
+            // ACTION 4:
+            // Lower stone arm
+            robot.servoStoneArm.setPosition(1.0);
+            sleep(500); // Delay long enough for latch to go down
 
-        // ACTION 6:
-        // Drive: Bring block across line
-        encoderDrive(DRIVE_SPEED, "backwards", 43, 9);
-        sleep(100);
+            // ACTION 5a:
+            // Drive: Back away from stones and align with parking lane
+            lane_distance = (navigationLane == AutonomousConfiguration.NavigationLane.Outside) ? 32 : 12;
+            encoderDrive(DRIVE_SPEED, "right", lane_distance, 2);
+            sleep(100);
 
-        // ACTION 7:
-        // Drive: Park on line
-        encoderDrive(DRIVE_SPEED, "forwards", 12, 4);
-        sleep(100);
+            // ACTION 5b:
+            // Drive: Bring block across line
+            encoderDrive(DRIVE_SPEED, direction_reverse, 43, 9);
+            sleep(100);
+
+            // ACTION 6:
+            // Raise stone arm
+            robot.servoStoneArm.setPosition(0.4);
+            sleep(100);
+
+            // ACTION 7:
+            // Drive: Park on under bridge
+            encoderDrive(DRIVE_SPEED, direction, 15, 5);
+            sleep(100);
+
+        } else {
+            // ACTION 1:
+            // Drive: Move away from wall and align with selected lane
+            lane_distance = (navigationLane == AutonomousConfiguration.NavigationLane.Outside) ? 3 : 27;
+            encoderDrive(DRIVE_SPEED, "left", lane_distance, 8);
+            sleep(100);
+
+            // ACTION 2:
+            // Drive: Park on line
+            encoderDrive(DRIVE_SPEED, direction_reverse, 40, 9);
+            sleep(100);
+        }
 
         // End autonomous actions here
 
@@ -275,6 +322,28 @@ public class AutoMoveBlock extends LinearOpMode {
             robot.lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
+
+private void GetAutonomousConfigurationOptions() {
+        // Get configuration selections from the driver using gamepad1.
+        autoConfig = new AutonomousConfiguration(gamepad2, telemetry, this);
+//orig:        autoConfig = new AutonomousConfiguration(gamepad2, telemetry);
+        autoConfig.ShowMenu();
+
+        // Save the driver selections for use in your autonomous strategy.
+        alliance = autoConfig.getAlliance();
+        navigationLane = autoConfig.getNavigationLane();
+        reposition = autoConfig.getReposition();
+
+        telemetry.clear();
+        telemetry.addData("You have Selected ", "");
+        telemetry.addData("", "");
+        telemetry.addData("Alliance Color ", alliance);
+        //telemetry.addData("Start position", startPosition);
+        telemetry.addData("Parking Lane ", navigationLane);
+        //telemetry.addData("Deliver", deliver);
+        //telemetry.addData("Move Foundation ", "not used");
+        telemetry.update();
     }
 
     public void MoveSideways (double power, String direction, int time)
