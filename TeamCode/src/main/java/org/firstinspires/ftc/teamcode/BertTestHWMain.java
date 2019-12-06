@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 // Based on TeamCode/src/main/java/org/firstinspires/ftc/teamcode/HardwarePushbot_BucketBrigade.java
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 import java.util.Set;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,10 +33,10 @@ public class BertTestHWMain {
 
     /* Public OpMode members. */
     // Drive Motors
-    public DcMotor  lf = null;     // Left Front drive motor
-    public DcMotor  lr = null;     // Left Rear drive motor
-    public DcMotor  rf = null;     // Right Front drive motor
-    public DcMotor  rr = null;     // Right Rear drive motor
+    public DcMotor lf = null;     // Left Front drive motor
+    public DcMotor lr = null;     // Left Rear drive motor
+    public DcMotor rf = null;     // Right Front drive motor
+    public DcMotor rr = null;     // Right Rear drive motor
 
     //Other Motors
     public DcMotor flapper = null;  //Stone, ramp, flapper
@@ -52,11 +54,11 @@ public class BertTestHWMain {
     public Servo capstoneServo;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public BertTestHWMain(){
+    public BertTestHWMain() {
 
     }
 
