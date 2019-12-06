@@ -20,7 +20,7 @@ public class ServoPickupTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // Create static variables
-   
+
     static boolean testServoState = true;
 
     @Override
@@ -48,9 +48,9 @@ public class ServoPickupTest extends LinearOpMode {
         // 10-12-2019: Servo Testing
         robot.servoLeft.setPosition(-1.0);
         robot.servoRight.setPosition(1.0);
-        
+
         sleep(500000);
-        
+
         // Stop CR servo by setting to 0.5
         //robot.servoLeft.setPosition(0.5);
         //robot.servoRight.setPosition(0.5);

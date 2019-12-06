@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This is NOT an opmode.
- *
+ * <p>
  * This class can be used to define the specific hardware for the new_chassis.
- *
+ * <p>
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- *
+ * <p>
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  * Motor channel:  Left  drive motor:        "left_lift"
@@ -20,22 +20,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo:          Lift lock servo:          "lift_lock_servo"
  * Touch:          Lift touch sensor:        "touch_sensor"
  * Color:          Color/Range sensor:       "sensorColor"
-09-14-2019: Added servo to test grabbing stone
+ * 09-14-2019: Added servo to test grabbing stone
  * Servo:          Grab stone server:     "stone_servo"
  */
 
 public class ServoPickupTestHWMain {
 
     /* Public OpMode members. */
-    public Servo            servoLeft;
-    public Servo            servoRight;
+    public Servo servoLeft;
+    public Servo servoRight;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public ServoPickupTestHWMain(){
+    public ServoPickupTestHWMain() {
 
     }
 

@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -38,7 +40,7 @@ public class AutoMoveBlock extends LinearOpMode {
     static final double DRIVE_SPEED = 0.7;
     static final double MOVE_FOUNDATION_SPEED = 0.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                          (WHEEL_DIAMETER_INCHES * 3.14159);
+            (WHEEL_DIAMETER_INCHES * 3.14159);
 
     // This the configuration class used to get the driver's selections.
     private AutonomousConfiguration autoConfig;
@@ -86,22 +88,22 @@ public class AutoMoveBlock extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Version", "0.2");
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.lf.getCurrentPosition(),
                 robot.rf.getCurrentPosition());
         telemetry.update();
 
         /**
-        // TODO: Init gyro - should set to zero (? validate this)
-        telemetry.addData("Mode", "calibrating...");
-        telemetry.update();
+         // TODO: Init gyro - should set to zero (? validate this)
+         telemetry.addData("Mode", "calibrating...");
+         telemetry.update();
 
-        // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !robot.imu.isGyroCalibrated()) {
-            sleep(50);
-            idle();
-        }
-        **/
+         // make sure the imu gyro is calibrated before continuing.
+         while (!isStopRequested() && !robot.imu.isGyroCalibrated()) {
+         sleep(50);
+         idle();
+         }
+         **/
 
         telemetry.addData("Mode", "waiting for start");
         telemetry.update();
@@ -115,11 +117,11 @@ public class AutoMoveBlock extends LinearOpMode {
         // Path: Launch from Depot side
 
         /* encoderDrive parameters (power, direction, distance, timeout)
-        *                Power:  0.0 to 1.0
-        *    Direction options:  "left", "right", "forward" or "backward"
-        *     Distance options:  inches
-        *              Timeout:  decimal number in seconds
-        */
+         *                Power:  0.0 to 1.0
+         *    Direction options:  "left", "right", "forward" or "backward"
+         *     Distance options:  inches
+         *              Timeout:  decimal number in seconds
+         */
 
         // Set direction variables based on alliance color selection during init
         /* If Blue alliance:
@@ -129,15 +131,15 @@ public class AutoMoveBlock extends LinearOpMode {
          *      - direction = backward
          *      - reverse_direction = forward
          */
-        direction = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "forward": "backward";
-        direction_reverse = (alliance == AutonomousConfiguration.AllianceColor.Blue)? "backward": "forward";
-        park_only = ( reposition == AutonomousConfiguration.Reposition.Yes ) ? true : false;
+        direction = (alliance == AutonomousConfiguration.AllianceColor.Blue) ? "forward" : "backward";
+        direction_reverse = (alliance == AutonomousConfiguration.AllianceColor.Blue) ? "backward" : "forward";
+        park_only = (reposition == AutonomousConfiguration.Reposition.Yes) ? true : false;
 
-/* ********************************** *
- *   Autonomous Actions: Loading Side *
- * ********************************** */
+        /* ********************************** *
+         *   Autonomous Actions: Loading Side *
+         * ********************************** */
 
-        if ( park_only == false ) {
+        if (park_only == false) {
             // ACTION 1:
             // Drive: Start moving to blocks
             encoderDrive(DRIVE_SPEED, "left", 16, 3.5);
@@ -209,10 +211,10 @@ public class AutoMoveBlock extends LinearOpMode {
         int newLeftRearTarget;
         int newRightRearTarget;
 
-        int lfDirection=0;
-        int rfDirection=0;
-        int lrDirection=0;
-        int rrDirection=0;
+        int lfDirection = 0;
+        int rfDirection = 0;
+        int lrDirection = 0;
+        int rrDirection = 0;
 
         double cpiCompensation = 1;
 
@@ -256,7 +258,7 @@ public class AutoMoveBlock extends LinearOpMode {
             telemetry.addData("Inches", inches);
             telemetry.addData("Tics/inch", CPI);
             telemetry.addData("Direction", "%12s", direction);
-            telemetry.addData("Path",  "Running at %7d :%7d",
+            telemetry.addData("Path", "Running at %7d :%7d",
                     robot.lf.getCurrentPosition(),
                     robot.rf.getCurrentPosition());
             telemetry.update();
@@ -264,10 +266,10 @@ public class AutoMoveBlock extends LinearOpMode {
 //sleep(2000);    // Testing: Allows time to read telemetry
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int)(inches * CPI * lfDirection);
-            newRightFrontTarget = robot.rf.getCurrentPosition() + (int)(inches * CPI * rfDirection);
-            newLeftRearTarget = robot.lr.getCurrentPosition() + (int)(inches * CPI * lrDirection);
-            newRightRearTarget = robot.rr.getCurrentPosition() + (int)(inches * CPI * rrDirection);
+            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int) (inches * CPI * lfDirection);
+            newRightFrontTarget = robot.rf.getCurrentPosition() + (int) (inches * CPI * rfDirection);
+            newLeftRearTarget = robot.lr.getCurrentPosition() + (int) (inches * CPI * lrDirection);
+            newRightRearTarget = robot.rr.getCurrentPosition() + (int) (inches * CPI * rrDirection);
             robot.lf.setTargetPosition(newLeftFrontTarget);
             robot.rf.setTargetPosition(newRightFrontTarget);
             robot.lr.setTargetPosition(newLeftRearTarget);
@@ -296,17 +298,17 @@ public class AutoMoveBlock extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.lf.isBusy() && robot.rf.isBusy() &&
-                     robot.lr.isBusy() && robot.rr.isBusy() )) {
+                            robot.lr.isBusy() && robot.rr.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftFrontTarget,  newRightFrontTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.lf.getCurrentPosition(),
                         robot.rf.getCurrentPosition());
                 telemetry.addData("isBusy:", "lf: %3b  rf: %3b  lr: %3b  rr: %3b",
                         robot.lf.isBusy(), robot.rf.isBusy(),
-                        robot.lr.isBusy(), robot.rr.isBusy() );
-                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds() );
+                        robot.lr.isBusy(), robot.rr.isBusy());
+                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds());
                 telemetry.update();
             }
 
@@ -324,7 +326,7 @@ public class AutoMoveBlock extends LinearOpMode {
         }
     }
 
-private void GetAutonomousConfigurationOptions() {
+    private void GetAutonomousConfigurationOptions() {
         // Get configuration selections from the driver using gamepad1.
         autoConfig = new AutonomousConfiguration(gamepad2, telemetry, this);
 //orig:        autoConfig = new AutonomousConfiguration(gamepad2, telemetry);
@@ -346,20 +348,15 @@ private void GetAutonomousConfigurationOptions() {
         telemetry.update();
     }
 
-    public void MoveSideways (double power, String direction, int time)
-    {
-        if (direction == "left")
-        {
+    public void MoveSideways(double power, String direction, int time) {
+        if (direction == "left") {
             robot.lf.setPower(-power);
             robot.lr.setPower(power);
             robot.rf.setPower(power);
             robot.rr.setPower(-power);
 
             sleep(time);
-        }
-
-        else if (direction == "right")
-        {
+        } else if (direction == "right") {
             robot.lf.setPower(power);
             robot.lr.setPower(-power);
             robot.rf.setPower(-power);
@@ -369,26 +366,21 @@ private void GetAutonomousConfigurationOptions() {
         }
     }
 
-    public void MoveFwdBack (double power, String direction, int time)
-    {
-        if (direction == "forward")
-        {
+    public void MoveFwdBack(double power, String direction, int time) {
+        if (direction == "forward") {
             robot.lf.setPower(power);
             robot.lr.setPower(power);
             robot.rf.setPower(power);
             robot.rr.setPower(power);
 
             sleep(time);
-        }
-
-        else if (direction == "backward")
-        {
+        } else if (direction == "backward") {
             robot.lf.setPower(-power);
             robot.lr.setPower(-power);
             robot.rf.setPower(-power);
             robot.rr.setPower(-power);
 
             sleep(time);
-       }
+        }
     }
 }

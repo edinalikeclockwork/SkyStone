@@ -11,28 +11,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This OpMode executes a 2nd method of Mecanum Drive Teleop.
- *
  */
 
 // Based on Mecanum algorithm from Piece of Cake
 
-@TeleOp(name="McTeleop_2")
+@TeleOp(name = "McTeleop_2")
 //@Disabled
 public class McTeleop_2 extends LinearOpMode {
 
     private McDriveTest_HW robot = new McDriveTest_HW();
-    
+
     private double powerMultipler = 1.0;
 
     @Override
-    
+
     public void runOpMode() {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        
+
         ElapsedTime runtime = new ElapsedTime();
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -73,7 +72,7 @@ public class McTeleop_2 extends LinearOpMode {
             robot.rf.setPower(gamepad1.right_trigger);
             robot.rr.setPower(-gamepad1.right_trigger);
         */
-        
+
             final double x = Math.pow(gamepad1.left_stick_x, 3.0);
             final double y = Math.pow(-gamepad1.left_stick_y, 3.0);
 
@@ -96,7 +95,7 @@ public class McTeleop_2 extends LinearOpMode {
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", FleftPower, FrightPower);
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", BleftPower, BrightPower);
             telemetry.update();*/
-           //Hello
+            //Hello
         }
     }
 }

@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -21,22 +23,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class AutoLoadingSide extends LinearOpMode {
 
-/*  ***************************************** *
- *  ***************************************** *
- *  *                                       * *
- *  *     SET BELOW BEFORE EVERY MATCH      * *
- *  *                                       * *
- *  *         Loading Side ONLY!!           * *
- *  *                                       * *
- *  ***************************************** *
- *  ***************************************** */
+    /*  ***************************************** *
+     *  ***************************************** *
+     *  *                                       * *
+     *  *     SET BELOW BEFORE EVERY MATCH      * *
+     *  *                                       * *
+     *  *         Loading Side ONLY!!           * *
+     *  *                                       * *
+     *  ***************************************** *
+     *  ***************************************** */
 
     String alliance = "Red";           // Will be "Red" or "Blue"
     String parkingLane = "Outside";     // Will be "Inside" or "Outside"
 
-/*  ***************************************** *
- *  *         End pre-match setup           * *
- *  ***************************************** */
+    /*  ***************************************** *
+     *  *         End pre-match setup           * *
+     *  ***************************************** */
 
     /* Declare OpMode members. */
 
@@ -55,7 +57,7 @@ public class AutoLoadingSide extends LinearOpMode {
     static final double DRIVE_SPEED = 0.7;
     static final double MOVE_FOUNDATION_SPEED = 0.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                          (WHEEL_DIAMETER_INCHES * 3.14159);
+            (WHEEL_DIAMETER_INCHES * 3.14159);
 
     String reposition = "Yes";    // Will always be "Yes" since we cannot move a stone
 
@@ -90,8 +92,8 @@ public class AutoLoadingSide extends LinearOpMode {
         robot.rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-/*  Moved this section to BertTestHWMain.java
-*/
+        /*  Moved this section to BertTestHWMain.java
+         */
 
         sleep(500);     // pause for telemetry msg to be seen
 
@@ -113,11 +115,11 @@ public class AutoLoadingSide extends LinearOpMode {
         // Path: Launch from Depot side
 
         /* encoderDrive parameters (power, direction, distance, timeout)
-        *                Power:  0.0 to 1.0
-        *    Direction options:  "left", "right", "forward" or "backward"
-        *     Distance options:  inches
-        *              Timeout:  decimal number in seconds
-        */
+         *                Power:  0.0 to 1.0
+         *    Direction options:  "left", "right", "forward" or "backward"
+         *     Distance options:  inches
+         *              Timeout:  decimal number in seconds
+         */
 
         // Set direction variables based on alliance color selection during init
         /* If Blue alliance:
@@ -127,15 +129,15 @@ public class AutoLoadingSide extends LinearOpMode {
          *      - direction = backward
          *      - reverse_direction = forward
          */
-        direction = (alliance == "Blue") ? "forward": "backward";
-        direction_reverse = (alliance == "Blue") ? "backward": "forward";
-        park_only = ( reposition == "Yes" ) ? true : false;
+        direction = (alliance == "Blue") ? "forward" : "backward";
+        direction_reverse = (alliance == "Blue") ? "backward" : "forward";
+        park_only = (reposition == "Yes") ? true : false;
 
-/* ********************************** *
- *   Autonomous Actions: Loading Side *
- * ********************************** */
-        if ( park_only == false ) {
-        // This should never exexute at Lakeville since we are unable to move a stone
+        /* ********************************** *
+         *   Autonomous Actions: Loading Side *
+         * ********************************** */
+        if (park_only == false) {
+            // This should never exexute at Lakeville since we are unable to move a stone
             // ACTION 1:
             // Drive: Start moving to blocks
             encoderDrive(DRIVE_SPEED, "left", 16, 3.5);
@@ -214,10 +216,10 @@ public class AutoLoadingSide extends LinearOpMode {
         int newLeftRearTarget;
         int newRightRearTarget;
 
-        int lfDirection=0;
-        int rfDirection=0;
-        int lrDirection=0;
-        int rrDirection=0;
+        int lfDirection = 0;
+        int rfDirection = 0;
+        int lrDirection = 0;
+        int rrDirection = 0;
 
         double cpiCompensation = 1;
 
@@ -261,7 +263,7 @@ public class AutoLoadingSide extends LinearOpMode {
             telemetry.addData("Inches", inches);
             telemetry.addData("Tics/inch", CPI);
             telemetry.addData("Direction", "%12s", direction);
-            telemetry.addData("Path",  "Running at %7d :%7d",
+            telemetry.addData("Path", "Running at %7d :%7d",
                     robot.lf.getCurrentPosition(),
                     robot.rf.getCurrentPosition());
             telemetry.update();
@@ -269,10 +271,10 @@ public class AutoLoadingSide extends LinearOpMode {
 //sleep(2000);    // Testing: Allows time to read telemetry
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int)(inches * CPI * lfDirection);
-            newRightFrontTarget = robot.rf.getCurrentPosition() + (int)(inches * CPI * rfDirection);
-            newLeftRearTarget = robot.lr.getCurrentPosition() + (int)(inches * CPI * lrDirection);
-            newRightRearTarget = robot.rr.getCurrentPosition() + (int)(inches * CPI * rrDirection);
+            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int) (inches * CPI * lfDirection);
+            newRightFrontTarget = robot.rf.getCurrentPosition() + (int) (inches * CPI * rfDirection);
+            newLeftRearTarget = robot.lr.getCurrentPosition() + (int) (inches * CPI * lrDirection);
+            newRightRearTarget = robot.rr.getCurrentPosition() + (int) (inches * CPI * rrDirection);
             robot.lf.setTargetPosition(newLeftFrontTarget);
             robot.rf.setTargetPosition(newRightFrontTarget);
             robot.lr.setTargetPosition(newLeftRearTarget);
@@ -301,17 +303,17 @@ public class AutoLoadingSide extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.lf.isBusy() && robot.rf.isBusy() &&
-                     robot.lr.isBusy() && robot.rr.isBusy() )) {
+                            robot.lr.isBusy() && robot.rr.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftFrontTarget,  newRightFrontTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.lf.getCurrentPosition(),
                         robot.rf.getCurrentPosition());
                 telemetry.addData("isBusy:", "lf: %3b  rf: %3b  lr: %3b  rr: %3b",
                         robot.lf.isBusy(), robot.rf.isBusy(),
-                        robot.lr.isBusy(), robot.rr.isBusy() );
-                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds() );
+                        robot.lr.isBusy(), robot.rr.isBusy());
+                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds());
                 telemetry.update();
             }
 

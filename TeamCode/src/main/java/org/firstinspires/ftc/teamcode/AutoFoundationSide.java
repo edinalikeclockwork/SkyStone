@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -21,23 +23,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class AutoFoundationSide extends LinearOpMode {
 
-/*  ***************************************** *
- *  ***************************************** *
- *  *                                       * *
- *  *     SET BELOW BEFORE EVERY MATCH      * *
- *  *                                       * *
- *  *       Foundation Side ONLY!!          * *
- *  *                                       * *
- *  ***************************************** *
- *  ***************************************** */
+    /*  ***************************************** *
+     *  ***************************************** *
+     *  *                                       * *
+     *  *     SET BELOW BEFORE EVERY MATCH      * *
+     *  *                                       * *
+     *  *       Foundation Side ONLY!!          * *
+     *  *                                       * *
+     *  ***************************************** *
+     *  ***************************************** */
 
     String alliance = "Red";           // Will be "Red" or "Blue"
     String moveFoundation = "Yes";      // Will be "Yes" or "No"
     String parkingLane = "Outside";     // Will be "Inside" or "Outside"
 
-/*  ***************************************** *
- *  *         End pre-match setup           * *
- *  ***************************************** */
+    /*  ***************************************** *
+     *  *         End pre-match setup           * *
+     *  ***************************************** */
 
     /* Declare OpMode members. */
 
@@ -56,12 +58,12 @@ public class AutoFoundationSide extends LinearOpMode {
     static final double DRIVE_SPEED = 0.7;
     static final double MOVE_FOUNDATION_SPEED = 0.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                          (WHEEL_DIAMETER_INCHES * 3.14159);
+            (WHEEL_DIAMETER_INCHES * 3.14159);
 
     String direction = "";
     String direction_reverse = "";
     int lane_distance = 0;
-    boolean move_foundation = ( moveFoundation == "Yes" ) ? true : false;
+    boolean move_foundation = (moveFoundation == "Yes") ? true : false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -84,7 +86,7 @@ public class AutoFoundationSide extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Version", "0.2");
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.lf.getCurrentPosition(),
                 robot.rf.getCurrentPosition());
         telemetry.update();
@@ -99,11 +101,11 @@ public class AutoFoundationSide extends LinearOpMode {
         // Path: Launch from Depot side
 
         /* encoderDrive parameters (power, direction, distance, timeout)
-        *                Power:  0.0 to 1.0
-        *    Direction options:  "left", "right", "forward" or "backward"
-        *     Distance options:  inches
-        *              Timeout:  decimal number in seconds
-        */
+         *                Power:  0.0 to 1.0
+         *    Direction options:  "left", "right", "forward" or "backward"
+         *     Distance options:  inches
+         *              Timeout:  decimal number in seconds
+         */
 
         // Set direction variables based on alliance color selection during init
         /* If Blue alliance:
@@ -113,15 +115,15 @@ public class AutoFoundationSide extends LinearOpMode {
          *      - direction = backward
          *      - reverse_direction = forward
          */
-        direction = (alliance == "Blue") ? "forward": "backward";
-        direction_reverse = (alliance == "Blue") ? "backward": "forward";
+        direction = (alliance == "Blue") ? "forward" : "backward";
+        direction_reverse = (alliance == "Blue") ? "backward" : "forward";
         // Set variable base on init selection controlling if foundation gets moved or not
 
-/* *********************************************** *
- *   Autonomous Actions: Build (Foundation) Side   *
- * *********************************************** */
+        /* *********************************************** *
+         *   Autonomous Actions: Build (Foundation) Side   *
+         * *********************************************** */
 
-        if ( move_foundation ) {
+        if (move_foundation) {
             // ACTION 1:
             // Drive: Start moving to foundation
             encoderDrive(DRIVE_SPEED, "right", 16, 3.5);
@@ -206,10 +208,10 @@ public class AutoFoundationSide extends LinearOpMode {
         int newLeftRearTarget;
         int newRightRearTarget;
 
-        int lfDirection=0;
-        int rfDirection=0;
-        int lrDirection=0;
-        int rrDirection=0;
+        int lfDirection = 0;
+        int rfDirection = 0;
+        int lrDirection = 0;
+        int rrDirection = 0;
 
         double cpiCompensation = 1;
 
@@ -252,7 +254,7 @@ public class AutoFoundationSide extends LinearOpMode {
             telemetry.addData("Inches", inches);
             telemetry.addData("Tics/inch", CPI);
             telemetry.addData("Direction", "%12s", direction);
-            telemetry.addData("Path",  "Running at %7d :%7d",
+            telemetry.addData("Path", "Running at %7d :%7d",
                     robot.lf.getCurrentPosition(),
                     robot.rf.getCurrentPosition());
             telemetry.update();
@@ -260,10 +262,10 @@ public class AutoFoundationSide extends LinearOpMode {
 //sleep(2000);    // Testing: Allows time to read telemetry
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int)(inches * CPI * lfDirection);
-            newRightFrontTarget = robot.rf.getCurrentPosition() + (int)(inches * CPI * rfDirection);
-            newLeftRearTarget = robot.lr.getCurrentPosition() + (int)(inches * CPI * lrDirection);
-            newRightRearTarget = robot.rr.getCurrentPosition() + (int)(inches * CPI * rrDirection);
+            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int) (inches * CPI * lfDirection);
+            newRightFrontTarget = robot.rf.getCurrentPosition() + (int) (inches * CPI * rfDirection);
+            newLeftRearTarget = robot.lr.getCurrentPosition() + (int) (inches * CPI * lrDirection);
+            newRightRearTarget = robot.rr.getCurrentPosition() + (int) (inches * CPI * rrDirection);
             robot.lf.setTargetPosition(newLeftFrontTarget);
             robot.rf.setTargetPosition(newRightFrontTarget);
             robot.lr.setTargetPosition(newLeftRearTarget);
@@ -292,17 +294,17 @@ public class AutoFoundationSide extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.lf.isBusy() && robot.rf.isBusy() &&
-                     robot.lr.isBusy() && robot.rr.isBusy() )) {
+                            robot.lr.isBusy() && robot.rr.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftFrontTarget,  newRightFrontTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.lf.getCurrentPosition(),
                         robot.rf.getCurrentPosition());
                 telemetry.addData("isBusy:", "lf: %3b  rf: %3b  lr: %3b  rr: %3b",
                         robot.lf.isBusy(), robot.rf.isBusy(),
-                        robot.lr.isBusy(), robot.rr.isBusy() );
-                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds() );
+                        robot.lr.isBusy(), robot.rr.isBusy());
+                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds());
                 telemetry.update();
             }
 

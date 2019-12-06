@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,23 +9,23 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 /**
  * Created by Ron on 11/16/2016.
  * Modified: 11/18/2019
- *
+ * <p>
  * 11-21-2019: Updated to fit LikeClockwork's Autonomous plan
- *
- package org.firstinspires.ftc.teamcode;
-
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-/**
+ * <p>
+ * package org.firstinspires.ftc.teamcode;
+ * <p>
+ * import com.qualcomm.robotcore.hardware.Gamepad;
+ * import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+ * import com.qualcomm.robotcore.util.ElapsedTime;
+ * <p>
+ * import org.firstinspires.ftc.robotcore.external.Telemetry;
+ * <p>
+ * /**
  * Created by Ron on 11/16/2016.
  * Modified: 11/18/2019
  * 11-21-2019: Updated to fit LikeClockwork's Autonomous plan
  * 11-23-2019: Additional updates but not functional - periodically
- *             app crashes when attempting to use this init menu
+ * app crashes when attempting to use this init menu
  * <p>
  * This class provides configuration for an autonomous opMode.
  * Most games benefit from autonomous opModes that can implement
@@ -37,7 +38,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * choose the wrong opMode "in the heat of battle."
  * </p>
  * <p>
- *     This class is a way to solve these problems.
+ * This class is a way to solve these problems.
  * </p>
  */
 
@@ -164,12 +165,14 @@ public class AutonomousConfiguration {
         do {
             if (gamePad1.x) {
                 alliance = AllianceColor.Blue;
-                while ( gamePad1.x ) { }        // Capture long press of button
+                while (gamePad1.x) {
+                }        // Capture long press of button
             }
 
             if (gamePad1.b) {
                 alliance = AllianceColor.Red;
-                while ( gamePad1.b ) { }
+                while (gamePad1.b) {
+                }
             }
 
             teleAlliance.setValue(alliance);
@@ -184,7 +187,8 @@ public class AutonomousConfiguration {
 
             if (gamePad1.dpad_up) {
                 navigationLane = navigationLane.getNext();
-                while ( gamePad1.dpad_up ) { }
+                while (gamePad1.dpad_up) {
+                }
             }
 
             teleNavigationLane.setValue(navigationLane);
@@ -199,7 +203,8 @@ public class AutonomousConfiguration {
 
             if (gamePad1.dpad_right) {
                 reposition = reposition.getNext();
-                while ( gamePad1.dpad_right ) { }
+                while (gamePad1.dpad_right) {
+                }
             }
 
             teleReposition.setValue(reposition);
@@ -215,11 +220,11 @@ public class AutonomousConfiguration {
             } else {
                 // Only allow loop exit if alliance and lane have been selected.
                 if (gamePad1.start && alliance != AllianceColor.None &&
-                                      navigationLane != navigationLane.None ) {
+                        navigationLane != navigationLane.None) {
                     break;
                 }
             }
-        //} while (true);
+            //} while (true);
         } while ((runTime.seconds() < 5) || (!opModeObj.isStopRequested()));
     }
 }

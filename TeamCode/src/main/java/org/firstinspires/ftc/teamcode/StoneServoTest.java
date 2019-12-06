@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -26,7 +28,7 @@ public class StoneServoTest extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    Orientation             lastAngles = new Orientation();
+    Orientation lastAngles = new Orientation();
     double globalAngle, power = .60, correction;
 
     // Create static variables
@@ -36,7 +38,7 @@ public class StoneServoTest extends LinearOpMode {
     static final double DRIVE_SPEED = 0.5;
     static final double TURN_SPEED = 0.3;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                          (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double deployServoPosition = 0.7;
     static final double openLiftLockServoPosition = 0.9;
     static final double resetServoPosition = 0;
@@ -65,8 +67,8 @@ public class StoneServoTest extends LinearOpMode {
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Version", "0.1");
         //telemetry.addData("Path0",  "Starting at %7d :%7d",
-                //robot.leftDrive.getCurrentPosition(),
-                //robot.rightDrive.getCurrentPosition());
+        //robot.leftDrive.getCurrentPosition(),
+        //robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
         // TODO: Init gyro - should set to zero (? validate this)

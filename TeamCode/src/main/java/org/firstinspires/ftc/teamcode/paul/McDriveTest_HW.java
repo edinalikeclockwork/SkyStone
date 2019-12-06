@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.paul;
 
 // Based on TeamCode/src/main/java/org/firstinspires/ftc/teamcode/HardwarePushbot_BucketBrigade.java
 
@@ -21,21 +21,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Right Front drive motor:    "right_front"
  * Motor channel:  Right Rear  drive motor:    "right_rear"
  */
- 
+
 public class McDriveTest_HW {
 
     /* Public OpMode members. */
-    public DcMotor  lf = null;     // Left Front drive motor
-    public DcMotor  lr = null;     // Left Rear drive motor
-    public DcMotor  rf = null;     // Right Front drive motor
-    public DcMotor  rr = null;     // Right Rear drive motor
+    public DcMotor lf = null;     // Left Front drive motor
+    public DcMotor lr = null;     // Left Rear drive motor
+    public DcMotor rf = null;     // Right Front drive motor
+    public DcMotor rr = null;     // Right Rear drive motor
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public McDriveTest_HW(){
+    public McDriveTest_HW() {
 
     }
 
@@ -45,9 +45,9 @@ public class McDriveTest_HW {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        lf  = hwMap.get(DcMotor.class, "left_front");
+        lf = hwMap.get(DcMotor.class, "left_front");
         lr = hwMap.get(DcMotor.class, "left_rear");
-        rf  = hwMap.get(DcMotor.class, "right_front");
+        rf = hwMap.get(DcMotor.class, "right_front");
         rr = hwMap.get(DcMotor.class, "right_rear");
 
         lf.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
@@ -68,4 +68,4 @@ public class McDriveTest_HW {
         //rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
- }
+}

@@ -10,12 +10,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This is NOT an opmode.
- *
+ * <p>
  * This class can be used to define the specific hardware for the new_chassis.
- *
+ * <p>
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- *
+ * <p>
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  * Motor channel:  Left  drive motor:        "left_lift"
@@ -23,31 +23,30 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo:          Marker placing servo:     "marker_servo"
  * Servo:          Lift lock servo:          "lift_lock_servo"
  * Touch:          Lift touch sensor:        "touch_sensor"
-
  */
 
 public class HardwareMain {
 
     /* Public OpMode members. */
-    public DcMotor          leftDrive   = null;
-    public DcMotor          rightDrive  = null;
-    public DcMotor          leftLift   = null;
-    public DcMotor          rightLift  = null;
-    public Servo            markerServo;
-    public Servo            lockServo;
-    public BNO055IMU        imu;
-    public DigitalChannel   digitalTouch;
+    public DcMotor leftDrive = null;
+    public DcMotor rightDrive = null;
+    public DcMotor leftLift = null;
+    public DcMotor rightLift = null;
+    public Servo markerServo;
+    public Servo lockServo;
+    public BNO055IMU imu;
+    public DigitalChannel digitalTouch;
 
 
-    public static final double MID_SERVO         = 0.5;
+    public static final double MID_SERVO = 0.5;
     public static final double servoInitPosition = 0.0;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public HardwareMain(){
+    public HardwareMain() {
 
     }
 
@@ -59,7 +58,7 @@ public class HardwareMain {
 
         // Define and Initialize Motors
         // Drive Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
+        leftDrive = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD
@@ -70,10 +69,10 @@ public class HardwareMain {
         // Gyro onboard Rev Hub
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
 
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
