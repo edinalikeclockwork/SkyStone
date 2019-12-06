@@ -9,42 +9,41 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * TeleOp OpMode to test features on B.E.R.T.
- * 
+ * <p>
  * - 10-26-2019: Added Mecanum drive (method 2)
  * - 10-26-2019: Added foundation servo
  * - 10-29-2019: Added stone arm servo
  * - 11-10-2019: Added servos for ramps and intake ramp wheels
  * - 11-21-2019: Added additional flapper motor gamepad2 controls
  * - 11-23-2019: Added servo for delivering capstone
- *
+ * <p>
  * This file contains a minimal TeleOp linear "OpMode".  This OpMode is for test
  * driving the the robot with a mecanum drive and also test the various servos
  * and sensors.
- *
  */
- 
+
 // Based on Mecanum algorithm from Piece of Cake
 
-@TeleOp(name="Bert Teleop")
+@TeleOp(name = "Bert Teleop")
 
 //@Disabled
 
 public class BertTest extends LinearOpMode {
 
     private BertTestHWMain robot = new BertTestHWMain();
-    
+
     private double powerMultipler = 1.0;
-    
+
     static final int COUNTS_PER_FLAPPER_REV = 288;    // eg: REV Core Hex Motor Encoder
     static final double FLAPPER_SPEED = -0.6;
 
     @Override
-    
+
     public void runOpMode() {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        
+
         ElapsedTime runtime = new ElapsedTime();
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -77,7 +76,7 @@ public class BertTest extends LinearOpMode {
             robot.rf.setPower(gamepad1.right_trigger);
             robot.rr.setPower(-gamepad1.right_trigger);
         */
-        
+
             final double x = Math.pow(gamepad1.left_stick_x, 3.0);
             final double y = Math.pow(-gamepad1.left_stick_y, 3.0);
 
@@ -105,51 +104,52 @@ public class BertTest extends LinearOpMode {
             telemetry.update();*/
 
             // Foundation Servo Controls
-            if ( gamepad2.a ) {
+            if (gamepad2.a) {
                 robot.dumpRamp.setPosition(0.3);
                 telemetry.addData("dumpRamp", "tip up");
                 telemetry.update();
-            } else if ( gamepad2.b ) {
+            } else if (gamepad2.b) {
                 robot.dumpRamp.setPosition(0.44);
                 telemetry.addData("dumpRamp", "move down");
                 telemetry.update();
-            } 
-            
+            }
+
             // Capstone delivery control - Uses Gamepad1
             //if ( gamepad1.y )  {
-            if ( gamepad1.y )  {
+            if (gamepad1.y) {
                 robot.capstoneServo.setPosition(0.85);
                 telemetry.addData("CapstoneArm", "move down - all the way");
                 telemetry.update();
-            } else if ( gamepad1.x ) {
+            } else if (gamepad1.x) {
                 robot.capstoneServo.setPosition(0.2);
                 telemetry.addData("CapstoneArm", "move up");
                 telemetry.update();
-            } else if ( gamepad1.b ) {
+            } else if (gamepad1.b) {
                 robot.capstoneServo.setPosition(0.7);
                 telemetry.addData("CapstoneArm", "move down - partial");
                 telemetry.update();
-            } 
-            
-            
+            }
 
-            if ( gamepad2.x ) {
+
+            if (gamepad2.x) {
                 // Toggle Stone Arm up and down using Gamepad2's X button
-                if ( robot.servoStoneArm.getPosition() < 0.7 ) {
+                if (robot.servoStoneArm.getPosition() < 0.7) {
                     robot.servoStoneArm.setPosition(1.0);
                 } else {
                     robot.servoStoneArm.setPosition(0.47);
                 }
-                while ( gamepad2.x && opModeIsActive() ) { }
+                while (gamepad2.x && opModeIsActive()) {
+                }
                 sleep(100);
-            } else if ( gamepad2.y ) {
+            } else if (gamepad2.y) {
                 // Toggle foundation latch up and down using Gamepad2's Y button
-                if ( robot.servoFoundation.getPosition() > 0.3 ) {
+                if (robot.servoFoundation.getPosition() > 0.3) {
                     robot.servoFoundation.setPosition(0.1);
                 } else {
                     robot.servoFoundation.setPosition(0.65);
                 }
-                while ( gamepad2.y && opModeIsActive() ) { }
+                while (gamepad2.y && opModeIsActive()) {
+                }
                 sleep(100);
             }
 
@@ -187,22 +187,22 @@ public class BertTest extends LinearOpMode {
                 robot.upperIntakeLeft.setPosition(1.0);
                 robot.flapper.setPower(FLAPPER_SPEED);
                 int i = 0;
-                while ( false && i < 5000 && opModeIsActive() ) {
-                int flapperPosition = robot.flapper.getCurrentPosition();
-                double flapperPower = robot.flapper.getPower();
-                double flapperRevs = flapperPosition / COUNTS_PER_FLAPPER_REV;
-                telemetry.addData("Flapper Ticks", "%7d", flapperPosition);
-                telemetry.addData("Flapper Revs", "%7f", flapperRevs);
-                telemetry.addData("Flapper Power", "%7f", flapperPower);
-                telemetry.addData("Counter", "%7d", i);
-                telemetry.update();
-                i++;
+                while (false && i < 5000 && opModeIsActive()) {
+                    int flapperPosition = robot.flapper.getCurrentPosition();
+                    double flapperPower = robot.flapper.getPower();
+                    double flapperRevs = flapperPosition / COUNTS_PER_FLAPPER_REV;
+                    telemetry.addData("Flapper Ticks", "%7d", flapperPosition);
+                    telemetry.addData("Flapper Revs", "%7f", flapperRevs);
+                    telemetry.addData("Flapper Power", "%7f", flapperPower);
+                    telemetry.addData("Counter", "%7d", i);
+                    telemetry.update();
+                    i++;
                 }
             }
 
-            if ( gamepad2.left_stick_button ) {
+            if (gamepad2.left_stick_button) {
                 // Toggle intake ramp wheels and flapper on/off
-                if ( robot.lowerIntakeLeft.getPosition() > 0.6 ) {
+                if (robot.lowerIntakeLeft.getPosition() > 0.6) {
                     robot.lowerIntakeRight.setPosition(0.49);
                     robot.lowerIntakeLeft.setPosition(0.5);
                     robot.upperIntakeRight.setPosition(0.51);
@@ -215,18 +215,19 @@ public class BertTest extends LinearOpMode {
                     robot.upperIntakeLeft.setPosition(1.0);
                     robot.flapper.setPower(FLAPPER_SPEED);
                 }
-                while ( gamepad2.left_stick_button && opModeIsActive()) { }
+                while (gamepad2.left_stick_button && opModeIsActive()) {
+                }
                 sleep(50);
-            } else if ( gamepad2.right_stick_button ) {
+            } else if (gamepad2.right_stick_button) {
                 // Toggle intake ramp servos on/off
                 double intakeWheelPosition = robot.lowerIntakeLeft.getPosition();
-                if ( intakeWheelPosition > 0.9 ) {
+                if (intakeWheelPosition > 0.9) {
                     // Left wheel running forward, switch to reverse
                     robot.lowerIntakeRight.setPosition(1.0);
                     robot.lowerIntakeLeft.setPosition(-1.0);
                     robot.upperIntakeRight.setPosition(1.0);
                     robot.upperIntakeLeft.setPosition(-1.0);
-                } else if ( intakeWheelPosition > -0.9 ) {
+                } else if (intakeWheelPosition > -0.9) {
                     // Left wheel running in reverse, switch to forward
                     robot.lowerIntakeRight.setPosition(-1.0);
                     robot.lowerIntakeLeft.setPosition(1.0);
@@ -234,10 +235,11 @@ public class BertTest extends LinearOpMode {
                     robot.upperIntakeLeft.setPosition(1.0);
                 }
                 sleep(100);
-                while ( gamepad2.left_stick_button && opModeIsActive() ) { }
+                while (gamepad2.left_stick_button && opModeIsActive()) {
+                }
                 sleep(50);
             }
- 
+
             // DPad Up/Down buttons control increment ramp movement
             double rampPositionR = robot.intakeRampRight.getPosition();
             double rampPositionL = robot.intakeRampRight.getPosition();
@@ -245,21 +247,21 @@ public class BertTest extends LinearOpMode {
             double newRampPositionR;
             double newRampPositionL;
             if (gamepad2.dpad_up && rampPositionR < 0.6) {
-                newRampPositionR = ( rampPositionR + 0.02 ) > 1 ? 1 : rampPositionR + 0.02;
-                newRampPositionL = ( rampPositionL - 0.02 ) < 0 ? 0 : rampPositionL - 0.02;
+                newRampPositionR = (rampPositionR + 0.02) > 1 ? 1 : rampPositionR + 0.02;
+                newRampPositionL = (rampPositionL - 0.02) < 0 ? 0 : rampPositionL - 0.02;
                 robot.intakeRampRight.setPosition(newRampPositionR);
                 robot.intakeRampLeft.setPosition(newRampPositionL);
                 sleep(50);
             } else if (gamepad2.dpad_down) {
                 //newRampPositionR = rampPositionR - 0.02;
                 //newRampPositionL = rampPositionL + 0.02;
-                newRampPositionR = ( rampPositionR - 0.02 ) < 0 ? 0 : rampPositionR - 0.02;
-                newRampPositionL = ( rampPositionL + 0.02 ) > 1 ? 1 : rampPositionL + 0.02;
+                newRampPositionR = (rampPositionR - 0.02) < 0 ? 0 : rampPositionR - 0.02;
+                newRampPositionL = (rampPositionL + 0.02) > 1 ? 1 : rampPositionL + 0.02;
                 robot.intakeRampRight.setPosition(newRampPositionR);
                 robot.intakeRampLeft.setPosition(newRampPositionL);
                 sleep(50);
             }
-            
+
             // Turn on/off flapper motor - DISABLED, see if clause below this one
             // Use a negative power to turn on with correct rotation
             /*
@@ -299,14 +301,15 @@ public class BertTest extends LinearOpMode {
                 sleep(50);
             }
             */
-            
+
             // Turn on/off flapper motor
             // Use a negative power to turn on with correct rotation
             double flapperCurrentPower = robot.flapper.getPower();
-            if ( gamepad2.dpad_right ) {
-                double flap_speed = ( flapperCurrentPower == 0.0 ) ? (FLAPPER_SPEED * 0.75) : 0.0;
+            if (gamepad2.dpad_right) {
+                double flap_speed = (flapperCurrentPower == 0.0) ? (FLAPPER_SPEED * 0.75) : 0.0;
                 robot.flapper.setPower(flap_speed); // Turn on flapper with half power (speed)
-                while ( gamepad2.dpad_right && opModeIsActive() ) { }
+                while (gamepad2.dpad_right && opModeIsActive()) {
+                }
                 telemetry.addData("DPad_Right Pressed", "%6b", gamepad2.dpad_right);
                 telemetry.addData("Postions:", "flap_speed: %7f, current power: %7f", flap_speed, flapperCurrentPower);
                 telemetry.update();
