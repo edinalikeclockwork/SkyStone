@@ -78,12 +78,14 @@ public class ColorTest2 extends LinearOpMode {
         // Wait for the start button to be pressed.
         waitForStart();
 
+// all variables being declared
         int counter = 0;
         int max_loops = 50;
         double r_total = 0.0;
         double b_total = 0.0;
         double r_average = 0.0;
         double b_average = 0.0;
+        double difference = 0.0;
 
         // Loop until we are asked to stop
         while (opModeIsActive() && counter <= max_loops) {
@@ -164,10 +166,29 @@ public class ColorTest2 extends LinearOpMode {
             });
         }
 
+        //takes average and different values and shows values on phone
         r_average = r_total/counter;
         b_average = b_total/counter;
         telemetry.addData("r_average = ", r_average);
         telemetry.addData("b_average = ", b_average);
+        difference = java. lang. Math. abs(r_average - b_average);
+        telemetry.addData("difference = ", difference);
 
+        //checks if data leads to skystone or not
+        boolean skystone;
+        if(difference < 0.200){
+
+            skystone = true;
+
+        }
+
+        else{
+
+            skystone = false;
+
+        }
+        telemetry.addData("skystone = ", skystone);
+        telemetry.update();
+        sleep(20000);
     }
 }
