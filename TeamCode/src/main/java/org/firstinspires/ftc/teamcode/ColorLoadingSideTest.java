@@ -35,6 +35,7 @@ public class ColorLoadingSideTest extends LinearOpMode {
 
     String alliance = "Red";           // Will be "Red" or "Blue"
     String parkingLane = "Outside";     // Will be "Inside" or "Outside"
+    String reposition = "No";    // Will always be "Yes" since we cannot move a stone
 
     /*  ***************************************** *
      *  *         End pre-match setup           * *
@@ -59,7 +60,6 @@ public class ColorLoadingSideTest extends LinearOpMode {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.14159);
 
-    String reposition = "Yes";    // Will always be "Yes" since we cannot move a stone
 
     String direction = "";
     String direction_reverse = "";
@@ -163,10 +163,10 @@ public class ColorLoadingSideTest extends LinearOpMode {
             // Grab on to the block
 
             //Action 4:
-            //Drive: Position to be able to cross bridge
+            //Drive: Pull SkyStone to get into position to be able to cross alliance bridge
 
             //Action 5:
-            //Drive: Cross bridge
+            //Drive: Cross alliance bridge
 
         } else {
             // ACTION 1:
