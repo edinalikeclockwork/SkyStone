@@ -1,6 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
+//import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -23,6 +29,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class ColorLoadingSideTest extends LinearOpMode {
 
+//ColorSensorTest colorSensorTest = new ColorSensorTest();
+//StoneColor stoneColor = new StoneColor();
+
+
     /*  ***************************************** *
      *  ***************************************** *
      *  *                                       * *
@@ -33,9 +43,9 @@ public class ColorLoadingSideTest extends LinearOpMode {
      *  ***************************************** *
      *  ***************************************** */
 
-    String alliance = "Red";           // Will be "Red" or "Blue"
-    String parkingLane = "Outside";     // Will be "Inside" or "Outside"
-    String reposition = "No";    // Will always be "Yes" since we cannot move a stone
+    String alliance = "Blue";           // Will be "Red" or "Blue"
+    String parkingLane = "Inside";     // Will be "Inside" or "Outside"
+    String reposition = "No";           // Will always be "Yes" since we cannot move a stone
 
     /*  ***************************************** *
      *  *         End pre-match setup           * *
@@ -44,7 +54,7 @@ public class ColorLoadingSideTest extends LinearOpMode {
     /* Declare OpMode members. */
 
     //McDriveTest_HW robot = new McDriveTest_HW();
-    private BertTestHWMain robot = new BertTestHWMain();
+    private GP_HWMain robot = new GP_HWMain();
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -55,7 +65,8 @@ public class ColorLoadingSideTest extends LinearOpMode {
     static final double COUNTS_PER_MOTOR_REV = 1440;     // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 0.705;    // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double DRIVE_SPEED = 0.7;
+    static final double DRIVE_SPEED = 0.5;
+    static final double COLOR_SPEED = 0.3;
     static final double MOVE_FOUNDATION_SPEED = 0.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.14159);
@@ -64,14 +75,15 @@ public class ColorLoadingSideTest extends LinearOpMode {
     String direction = "";
     String direction_reverse = "";
     int lane_distance = 0;
+    int deliver_distance = 43;  // Base inches to deliver stone under bridge
     boolean park_only = false;
+    boolean skystone;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -111,6 +123,19 @@ public class ColorLoadingSideTest extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+/*
+        skystone = sampleStone();
+        //telemetry.addData("int g = ", colorSensorTest.function(1));
+        telemetry.addData("1st Skystone = ", skystone);
+        telemetry.update();
+        sleep(8000);
+        skystone = sampleStone();
+        telemetry.addData("2nd Skystone = ", skystone);
+        telemetry.update();
+        sleep(12000);
+*/
+
+
         // Start autonomous actions here
         // Path: Launch from Depot side
 
@@ -137,38 +162,61 @@ public class ColorLoadingSideTest extends LinearOpMode {
          *   Autonomous Actions: Loading Side *
          * ********************************** */
         if (park_only == false) {
-            // This should never execute at Lakeville since we are unable to move a stone
+            // Find and deliver Skystone
+
             // ACTION 1:
-            // Drive: Move to blocks
-            encoderDrive(DRIVE_SPEED, "left", 28, 3.5);
+            // Drive: Move to stones
+            encoderDrive(DRIVE_SPEED, "left", 30, 4);
             sleep(100);
 
-            // ACTION 2a:
-            // Sense color of block
-            /*
-            if (stone)
-                drive forward 8"
-                test color
-                if (stone){
-                drive forward 8"
+            // ACTION 2:
+            // Find Skystone
+            skystone = sampleStone();
+            sleep(20000);
+            if (!skystone) {
+                encoderDrive(COLOR_SPEED, direction, 8, 3.5);
+                deliver_distance += 8;
+                skystone = sampleStone();
+                if (!skystone) {
+                    encoderDrive(COLOR_SPEED, direction, 8, 3.5);
+                    deliver_distance += 8;
                 }
             }
-            Pickup Stone
-            */
 
-            // ACTION 2b:
-            //
+            // Action 3:
+            // Pickup Stone
+            // a) Center on Stone
+            // b) Drive to Stone
+            // c) Lower stone arm
+                    //robot.servoStoneArm.setPosition(1.0);
+                    //sleep(500); // Delay long enough for latch to go down
 
-            // ACTION 3:
-            // Grab on to the block
+            // ACTION 4:
+            // Drive: Backup from stones
+            lane_distance = (parkingLane == "Outside") ? 32 : 12;
+            encoderDrive(DRIVE_SPEED, "right", lane_distance, 5);
+            sleep(100);
 
-            //Action 4:
-            //Drive: Pull SkyStone to get into position to be able to cross alliance bridge
+            // Action 5:
+            // Drive under bridge to deliver stone (43+)
+            telemetry.addData("Deliver distance:", deliver_distance);
+            telemetry.update();
+            sleep(2000);
+            encoderDrive(DRIVE_SPEED, direction_reverse, deliver_distance, 3.5);
+            sleep(100);
 
-            //Action 5:
-            //Drive: Cross alliance bridge
+            // Action 6:
+            // Release Stone
+            // robot.servoStoneArm.setPosition(0.4);
+            sleep(100);
+
+            // Action 7:
+            // Park under bridge
+            encoderDrive(DRIVE_SPEED, direction, 18, 3.5);
 
         } else {
+            // Parking Only
+
             // ACTION 1:
             // Drive: Move away from wall and align with selected lane
             lane_distance = (parkingLane == "Outside") ? 4 : 27;
@@ -195,6 +243,10 @@ public class ColorLoadingSideTest extends LinearOpMode {
 
         sleep(2000);
     }
+
+/* * * * * * *
+ *  Methods  *
+ * * * * * * */
 
     public void encoderDrive(double speed, String direction,
                              double inches,
@@ -318,5 +370,81 @@ public class ColorLoadingSideTest extends LinearOpMode {
             robot.lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
+
+    public boolean sampleStone() {
+
+        int counter = 0;
+        int sample_loops = 5;  // Number of times to sample color in loop
+
+        double h_total = 0.0;
+        double r_total = 0.0;
+        double b_total = 0.0;
+        double h_average = 0.0;
+        double r_average = 0.0;
+        double b_average = 0.0;
+        double difference = 0.0;
+
+        // values is a reference to the hsvValues array.
+        float[] hsvValues = new float[3];
+        final float values[] = hsvValues;
+
+        while (opModeIsActive() && counter <= sample_loops) {
+
+            // Read the sensor
+            NormalizedRGBA colors = robot.colorSensor.getNormalizedColors();
+            Color.colorToHSV(colors.toColor(), hsvValues);
+
+            telemetry.addLine()
+                    .addData("H", "%.3f", hsvValues[0])
+                    .addData("S", "%.3f", hsvValues[1])
+                    .addData("V", "%.3f", hsvValues[2]);
+            telemetry.addLine()
+                    .addData("a", "%.3f", colors.alpha)
+                    .addData("r", "%.3f", colors.red)
+                    .addData("g", "%.3f", colors.green)
+                    .addData("b", "%.3f", colors.blue);
+
+            // Running total of red and blue values
+            h_total = h_total + hsvValues[0];
+            r_total = r_total + colors.red;
+            b_total = b_total + colors.blue;
+
+            counter++;
+            telemetry.addData("Counter", counter);
+            telemetry.update();
+            sleep(10);
+
+        }
+
+        //Calculate red and blue average and then find difference
+        h_average = h_total/counter;
+        r_average = r_total/counter;
+        b_average = b_total/counter;
+        telemetry.addData("r_average = ", r_average);
+        telemetry.addData("b_average = ", b_average);
+        difference = Math.abs(r_average - b_average);
+        telemetry.addData("difference = ", difference);
+
+        //checks if data leads to skystone or not
+        boolean skystone;
+        if ( h_average > 100 ) {
+            skystone = true;
+        } else {
+            skystone = false;
+        }
+/*
+        if (difference < 0.200) {
+            skystone = true;
+        } else {
+            skystone = false;
+        }
+*/
+        //skystone = false;
+        telemetry.addData("Method: skystone = ", skystone);
+        telemetry.update();
+
+sleep(1000);
+        return skystone;
     }
 }
