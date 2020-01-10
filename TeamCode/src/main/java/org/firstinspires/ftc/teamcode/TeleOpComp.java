@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class TeleOpComp extends LinearOpMode {
 
-    private BertTestHWMain robot = new BertTestHWMain();
+    private TeleOpCompHWMain robot = new TeleOpCompHWMain();
 
     private double powerMultiplier = 1.0;
 
