@@ -105,30 +105,31 @@ public class IntakeTest extends LinearOpMode {
 
             telemetry.addData("Running...", "Wait for cmd");
             telemetry.update();
-                // Turn on/off flapper motor
-                // Use a negative power to turn on with correct rotation
-                double intakePower = robot.intakeRight.getPower();
-                if (gamepad1.a) {
-                    telemetry.addData("Button pressed...", "Gamepad 1 A");
-                    telemetry.update();
 
-                    // Toggle drive motor power
-                    if (intakePower == 0.0) {
-                        intakePower = 0.5;
 
-                        robot.intakeLeft.setPower(-intakePower);
-                        robot.intakeRight.setPower(intakePower);
-                    } else {
+            // Turn on/off flapper motor
+            // Use a negative power to turn on with correct rotation
+            double intakePower = robot.intakeRight.getPower();
+            if (gamepad1.a) {
+                telemetry.addData("Button pressed...", "Gamepad 1 A");
+                telemetry.update();
 
-                        intakePower = 0.0;
-                        robot.intakeLeft.setPower(intakePower);
-                        robot.intakeRight.setPower(intakePower);
-                    }
-                    while (gamepad1.a && opModeIsActive()) {
-                    }
-                    sleep(100);
+                // Toggle drive motor power
+                if (intakePower == 0.0) {
+                    intakePower = 0.5;
 
+                    robot.intakeLeft.setPower(-intakePower);
+                    robot.intakeRight.setPower(intakePower);
+                } else {
+
+                    intakePower = 0.0;
+                    robot.intakeLeft.setPower(intakePower);
+                    robot.intakeRight.setPower(intakePower);
                 }
+                while ( gamepad1.a && opModeIsActive() ) { }
+                sleep(100);
+
             }
         }
     }
+}
