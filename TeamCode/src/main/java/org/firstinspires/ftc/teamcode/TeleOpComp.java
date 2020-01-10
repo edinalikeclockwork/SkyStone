@@ -119,7 +119,7 @@ public class TeleOpComp extends LinearOpMode {
                 sleep(100);
             }
             double intakePower = robot.intakeRight.getPower();
-            if (gamepad1.a) {
+            if (gamepad2.a) {
                 telemetry.addData("Button pressed...", "Gamepad 1 A");
                 telemetry.update();
 
@@ -135,7 +135,7 @@ public class TeleOpComp extends LinearOpMode {
                     robot.intakeLeft.setPower(intakePower);
                     robot.intakeRight.setPower(intakePower);
                 }
-                while ( gamepad1.a && opModeIsActive() ) { }
+                while ( gamepad2.a && opModeIsActive() ) { }
                 sleep(100);
 
             }
