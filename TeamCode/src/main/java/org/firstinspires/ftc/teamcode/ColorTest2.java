@@ -80,7 +80,7 @@ public class ColorTest2 extends LinearOpMode {
 
 // all variables being declared
         int counter = 0;
-        int max_loops = 50;
+        int max_loops = 5;
         double r_total = 0.0;
         double b_total = 0.0;
         double r_average = 0.0;
