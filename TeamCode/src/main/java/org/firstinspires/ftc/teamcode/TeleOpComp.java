@@ -120,7 +120,7 @@ public class TeleOpComp extends LinearOpMode {
             }
             double intakePower = robot.intakeRight.getPower();
             if (gamepad2.a) {
-                telemetry.addData("Button pressed...", "Gamepad 1 A");
+                telemetry.addData("Button pressed...", "Gamepad 2 A");
                 telemetry.update();
 
                 // Toggle drive motor power
