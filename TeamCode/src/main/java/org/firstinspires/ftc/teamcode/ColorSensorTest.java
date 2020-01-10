@@ -170,4 +170,9 @@ public class ColorSensorTest extends LinearOpMode {
       });
     }
   }
+  int function (int f){
+    int g = f + 1;
+
+    return g;
+  }
 }

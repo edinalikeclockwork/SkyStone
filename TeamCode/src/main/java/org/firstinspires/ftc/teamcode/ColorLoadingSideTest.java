@@ -318,5 +318,9 @@ public class ColorLoadingSideTest extends LinearOpMode {
             robot.lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+        ColorSensorTest colorSensorTest = new ColorSensorTest();
+
+        telemetry.addData("F", colorSensorTest.function(1));
+        telemetry.update();
     }
 }
