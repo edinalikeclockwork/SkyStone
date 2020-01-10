@@ -9,21 +9,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * TeleOp OpMode to test features on B.E.R.T.
- *
+ * <p>
  * - 10-26-2019: Added Mecanum drive (method 2)
  * - 10-26-2019: Added foundation servo
  * - 10-29-2019: Added stone arm servo
-0 * - 11-23-2019: Added servo for delivering capstone
- *
+ * - 11-10-2019: Added servos for ramps and intake ramp wheels
+ * - 11-21-2019: Added additional flapper motor gamepad2 controls
+ * - 11-23-2019: Added servo for delivering capstone
+ * <p>
  * This file contains a minimal TeleOp linear "OpMode".  This OpMode is for test
  * driving the the robot with a mecanum drive and also test the various servos
  * and sensors.
- *
  */
 
 // Based on Mecanum algorithm from Piece of Cake
 
-@TeleOp(name="Bert Teleop")
+@TeleOp(name = "Bert Teleop")
 
 //@Disabled
 
@@ -32,7 +33,6 @@ public class TeleOpComp extends LinearOpMode {
     private TeleOpCompHWMain robot = new TeleOpCompHWMain();
 
     private double powerMultiplier = 1.0;
-
 
     @Override
 
@@ -52,32 +52,11 @@ public class TeleOpComp extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-        /*
-            ** McTeleop_1 joystick controls
-
-            // Setup a variable for each drive wheel to save power level for telemetry
-            //Forward/Backward
-            robot.lf.setPower(gamepad1.left_stick_y);
-            robot.lr.setPower(gamepad1.left_stick_y);
-            robot.rf.setPower(gamepad1.right_stick_y);
-            robot.rr.setPower(gamepad1.right_stick_y);
-
-            //Left
-            robot.lf.setPower(gamepad1.left_trigger);
-            robot.lr.setPower(-gamepad1.left_trigger);
-            robot.rf.setPower(-gamepad1.left_trigger);
-            robot.rr.setPower(gamepad1.left_trigger);
-            //Right
-            robot.lf.setPower(-gamepad1.right_trigger);
-            robot.lr.setPower(gamepad1.right_trigger);
-            robot.rf.setPower(gamepad1.right_trigger);
-            robot.rr.setPower(-gamepad1.right_trigger);
-        */
 
             final double x = Math.pow(gamepad1.left_stick_x, 3.0);
             final double y = Math.pow(-gamepad1.left_stick_y, 3.0);
 
-            final double rotation = Math.pow(gamepad1.right_stick_x, 3.0);
+            final double rotation = Math.pow(-gamepad1.right_stick_x, 3.0);
             final double direction = Math.atan2(x, y);
             final double speed = Math.min(1.0, Math.sqrt(x * x + y * y));
 
@@ -100,58 +79,66 @@ public class TeleOpComp extends LinearOpMode {
 
             telemetry.update();*/
 
-            }
 
             // Capstone delivery control - Uses Gamepad1
             //if ( gamepad1.y )  {
-            if ( gamepad1.y )  {
-                robot.capstoneServo.setPosition(0.95);
+            if (gamepad1.y) {
+                robot.capstoneServo.setPosition(0.85);
                 telemetry.addData("CapstoneArm", "move down - all the way");
                 telemetry.update();
-            } else if ( gamepad1.x ) {
-                robot.capstoneServo.setPosition(0.25);
+            } else if (gamepad1.x) {
+                robot.capstoneServo.setPosition(0.2);
                 telemetry.addData("CapstoneArm", "move up");
                 telemetry.update();
-            } else if ( gamepad1.b ) {
-                robot.capstoneServo.setPosition(0.8);
+            } else if (gamepad1.b) {
+                robot.capstoneServo.setPosition(0.7);
                 telemetry.addData("CapstoneArm", "move down - partial");
                 telemetry.update();
             }
 
 
-
-            if ( gamepad2.x ) {
+            if (gamepad2.x) {
                 // Toggle Stone Arm up and down using Gamepad2's X button
-                if ( robot.servoStoneArm.getPosition() < 0.7 ) {
+                if (robot.servoStoneArm.getPosition() < 0.7) {
                     robot.servoStoneArm.setPosition(1.0);
                 } else {
                     robot.servoStoneArm.setPosition(0.47);
                 }
-                while ( gamepad2.x && opModeIsActive() ) { }
+                while (gamepad2.x && opModeIsActive()) {
+                }
                 sleep(100);
-            } else if ( gamepad2.y ) {
+            } else if (gamepad2.y) {
                 // Toggle foundation latch up and down using Gamepad2's Y button
-                if ( robot.servoFoundation.getPosition() > 0.3 ) {
+                if (robot.servoFoundation.getPosition() > 0.3) {
                     robot.servoFoundation.setPosition(0.1);
                 } else {
                     robot.servoFoundation.setPosition(0.65);
                 }
-                while ( gamepad2.y && opModeIsActive() ) { }
+                while (gamepad2.y && opModeIsActive()) {
+                }
                 sleep(100);
-            } else if ( gamepad1.a ) {
-                if (powerMultiplier == 1.0) {
-                    powerMultiplier = 0.5;
+            }
+            double intakePower = robot.intakeRight.getPower();
+            if (gamepad1.a) {
+                telemetry.addData("Button pressed...", "Gamepad 1 A");
+                telemetry.update();
+
+                // Toggle drive motor power
+                if (intakePower == 0.0) {
+                    intakePower = 0.5;
+
+                    robot.intakeLeft.setPower(-intakePower);
+                    robot.intakeRight.setPower(intakePower);
                 } else {
-                    powerMultiplier = 1.0;
+
+                    intakePower = 0.0;
+                    robot.intakeLeft.setPower(intakePower);
+                    robot.intakeRight.setPower(intakePower);
                 }
                 while ( gamepad1.a && opModeIsActive() ) { }
                 sleep(100);
-            }
-
 
             }
-
-
-
-
+        }
+    }
 }
