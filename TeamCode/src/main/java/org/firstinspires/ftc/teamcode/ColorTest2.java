@@ -87,16 +87,6 @@ public class ColorTest2 extends LinearOpMode {
         double b_average = 0.0;
         double difference = 0.0;
 
-        // Loop until we are asked to stop
-        while (opModeIsActive() && counter <= max_loops) {
-
-            // Read the sensor
-            NormalizedRGBA colors = colorSensor.getNormalizedColors();
-
-            /** Use telemetry to display feedback on the driver station. We show the conversion
-             * of the colors to hue, saturation and value, and display the the normalized values
-             * as returned from the sensor.
-             * @see <a href="http://infohost.nmt.edu/tcc/help/pubs/colortheory/web/hsv.html">HSV</a>*/
 
             Color.colorToHSV(colors.toColor(), hsvValues);
       /*
