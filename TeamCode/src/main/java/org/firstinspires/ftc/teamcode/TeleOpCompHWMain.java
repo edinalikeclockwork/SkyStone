@@ -37,7 +37,6 @@ public class TeleOpCompHWMain {
     public DcMotor  rr = null;     // Right Rear drive motor
 
     //Other Motors
-    public DcMotor flapper = null;  //Stone, ramp, flapper
     public DcMotor intakeLeft = null;
     public DcMotor intakeRight = null;
 
@@ -45,17 +44,10 @@ public class TeleOpCompHWMain {
     /* Servos */
     public Servo servoFoundation;
     public Servo servoStoneArm;
-    public Servo intakeRampRight;
-    public Servo intakeRampLeft;
-    public Servo lowerIntakeRight;
-    public Servo lowerIntakeLeft;
-    public Servo upperIntakeRight;
-    public Servo upperIntakeLeft;
-    public Servo dumpRamp;
     public Servo capstoneServo;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
+    HardwareMap hwMap           = null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
@@ -73,7 +65,6 @@ public class TeleOpCompHWMain {
         lr = hwMap.get(DcMotor.class, "left_rear");
         rf = hwMap.get(DcMotor.class, "right_front");
         rr = hwMap.get(DcMotor.class, "right_rear");
-        flapper = hwMap.get(DcMotor.class, "flapper");
         intakeLeft  = hwMap.get(DcMotor.class, "intake_left");
         intakeRight = hwMap.get(DcMotor.class, "intake_right");
 
@@ -104,10 +95,6 @@ public class TeleOpCompHWMain {
         intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // set flapper motor to use encoder
-        flapper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        flapper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         // Define and initialize ALL installed servos.
         //
         // Servo to control foundation latch - init to raised position
@@ -118,31 +105,6 @@ public class TeleOpCompHWMain {
         // Lower position numbers raise arm farther
         servoStoneArm = hwMap.servo.get("stone_arm_servo");
         servoStoneArm.setPosition(0.47);
-
-        // Servo to control dump ramp - init to lowered position
-        // Small numbers raise the ramp
-        dumpRamp = hwMap.servo.get("dump_ramp");
-        dumpRamp.setPosition(0.43);
-
-        // Servos to control intake ramp - init to raised position
-        intakeRampRight = hwMap.servo.get("intake_ramp_right");
-        intakeRampLeft = hwMap.servo.get("intake_ramp_left");
-        //intakeRampRight.setPosition(0.5);
-        //intakeRampLeft.setPosition(0.5);
-        // Ramp in up position
-        intakeRampRight.setPosition(1.0);
-        intakeRampLeft.setPosition(0.08);
-
-        // Continuous rotation servos on ramp wheels
-        //   - Set to 0.5 (or close) so they init as stopped
-        lowerIntakeRight = hwMap.servo.get("lower_intake_right");
-        lowerIntakeLeft = hwMap.servo.get("lower_intake_left");
-        lowerIntakeRight.setPosition(0.49);
-        lowerIntakeLeft.setPosition(0.50);
-        upperIntakeRight = hwMap.servo.get("upper_intake_right");
-        upperIntakeLeft = hwMap.servo.get("upper_intake_left");
-        upperIntakeRight.setPosition(0.50);
-        upperIntakeLeft.setPosition(0.49);
 
         //Servo to place capstone on foundation
         capstoneServo = hwMap.servo.get("capstone_servo");

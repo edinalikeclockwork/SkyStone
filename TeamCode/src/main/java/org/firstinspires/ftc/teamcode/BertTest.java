@@ -32,7 +32,7 @@ public class BertTest extends LinearOpMode {
 
     private BertTestHWMain robot = new BertTestHWMain();
 
-    private double powerMultipler = 1.0;
+    private double powerMultiplier = 1.0;
 
     static final int COUNTS_PER_FLAPPER_REV = 288;    // eg: REV Core Hex Motor Encoder
     static final double FLAPPER_SPEED = -0.6;
@@ -89,10 +89,10 @@ public class BertTest extends LinearOpMode {
             final double lr_power = speed * Math.cos(direction + Math.PI / 4.0) + rotation;
             final double rr_power = speed * Math.sin(direction + Math.PI / 4.0) - rotation;
 
-            robot.lf.setPower(-lf_power * powerMultipler);
-            robot.rf.setPower(-rf_power * powerMultipler);
-            robot.lr.setPower(-lr_power * powerMultipler);
-            robot.rr.setPower(-rr_power * powerMultipler);
+            robot.lf.setPower(-lf_power * powerMultiplier);
+            robot.rf.setPower(-rf_power * powerMultiplier);
+            robot.lr.setPower(-lr_power * powerMultiplier);
+            robot.rr.setPower(-rr_power * powerMultiplier);
 
             // Show the elapsed game time and wheel power.
             /* telemetry.addData("Status", "Run Time: " + runtime].toString());
