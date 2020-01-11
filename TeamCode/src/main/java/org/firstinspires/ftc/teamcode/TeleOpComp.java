@@ -24,7 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 // Based on Mecanum algorithm from Piece of Cake
 
-@TeleOp(name = "Bert Teleop")
+@TeleOp(name = "TeleOpComp")
 
 //@Disabled
 
