@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class ServoPickupTest extends LinearOpMode {
 
-    /* Declare OpMode members. */
+    /*Declare OpMode members. */
 
     ServoPickupTestHWMain robot = new ServoPickupTestHWMain();
 
