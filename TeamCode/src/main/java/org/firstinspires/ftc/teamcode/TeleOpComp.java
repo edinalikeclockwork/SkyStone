@@ -127,7 +127,7 @@ public class TeleOpComp extends LinearOpMode {
                 if (intakePower == 0.0) {
                     intakePower = 0.5;
 
-                    robot.intakeLeft.setPower(-intakePower);
+                    robot.intakeLeft.setPower(intakePower);
                     robot.intakeRight.setPower(intakePower);
                 } else {
 
