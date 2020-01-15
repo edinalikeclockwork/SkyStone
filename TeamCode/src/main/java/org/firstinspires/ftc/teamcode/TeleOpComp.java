@@ -123,7 +123,7 @@ public class TeleOpComp extends LinearOpMode {
                 telemetry.addData("Button pressed...", "Gamepad 2 A");
                 telemetry.update();
 
-                // Toggle drive motor power
+                // Toggle intake motor power
                 if (intakePower == 0.0) {
                     intakePower = 0.5;
 
@@ -135,10 +135,31 @@ public class TeleOpComp extends LinearOpMode {
                     robot.intakeLeft.setPower(intakePower);
                     robot.intakeRight.setPower(intakePower);
                 }
-                while ( gamepad2.a && opModeIsActive() ) { }
+                while (gamepad2.a && opModeIsActive()) {
+                }
+                sleep(100);
+
+            }  else if (gamepad2.right_bumper) {
+                telemetry.addData("Button pressed...", "Gamepad 2 right_bumper");
+                telemetry.update();
+
+                // Toggle intake motor power
+                if (intakePower == 0.5) {
+                    intakePower = -0.5;
+
+                    robot.intakeLeft.setPower(intakePower);
+                    robot.intakeRight.setPower(intakePower);
+                } else if (intakePower == -0.5) {
+
+                    intakePower = 0.5;
+                    robot.intakeLeft.setPower(intakePower);
+                    robot.intakeRight.setPower(intakePower);
+                }
+                while ( gamepad2.right_bumper && opModeIsActive() ) { }
                 sleep(100);
 
             }
+
         }
     }
 }
