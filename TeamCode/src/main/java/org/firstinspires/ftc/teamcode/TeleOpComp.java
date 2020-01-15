@@ -94,7 +94,7 @@ public class TeleOpComp extends LinearOpMode {
                 robot.capstoneServo.setPosition(0.7);
                 telemetry.addData("CapstoneArm", "move down - partial");
                 telemetry.update();
-            }
+            } 
 
 
             if (gamepad2.x) {
@@ -117,6 +117,10 @@ public class TeleOpComp extends LinearOpMode {
                 while (gamepad2.y && opModeIsActive()) {
                 }
                 sleep(100);
+            } else if (gamepad2.left_bumper){
+                robot.handServo.setPosition(1);
+                // raise lift motor 
+                robot.handServo.setPosition(1);
             }
             double intakePower = robot.intakeRight.getPower();
             if (gamepad2.a) {
