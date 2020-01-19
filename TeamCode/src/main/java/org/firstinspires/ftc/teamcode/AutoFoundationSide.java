@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -23,28 +22,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class AutoFoundationSide extends LinearOpMode {
 
-    /*  ***************************************** *
-     *  ***************************************** *
-     *  *                                       * *
-     *  *     SET BELOW BEFORE EVERY MATCH      * *
-     *  *                                       * *
-     *  *       Foundation Side ONLY!!          * *
-     *  *                                       * *
-     *  ***************************************** *
-     *  ***************************************** */
+/*  ***************************************** *
+ *  ***************************************** *
+ *  *                                       * *
+ *  *     SET BELOW BEFORE EVERY MATCH      * *
+ *  *                                       * *
+ *  *       Foundation Side ONLY!!          * *
+ *  *                                       * *
+ *  ***************************************** *
+ *  ***************************************** */
 
-    String alliance = "Red";           // Will be "Red" or "Blue"
-    String moveFoundation = "Yes";      // Will be "Yes" or "No"
-    String parkingLane = "Outside";     // Will be "Inside" or "Outside"
+    String alliance = "Blue";           // Will be "Red" or "Blue"
+    String moveFoundation = "No";      // Will be "Yes" or "No". No = park only
+    String parkingLane = "Inside";     // Will be "Inside" or "Outside"
 
-    /*  ***************************************** *
-     *  *         End pre-match setup           * *
-     *  ***************************************** */
+/*  ***************************************** *
+ *  *         End pre-match setup           * *
+ *  ***************************************** */
 
     /* Declare OpMode members. */
 
     //McDriveTest_HW robot = new McDriveTest_HW();
-    private BertTestHWMain robot = new BertTestHWMain();
+    private TeleOpCompHWMain robot = new TeleOpCompHWMain();
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -52,24 +51,24 @@ public class AutoFoundationSide extends LinearOpMode {
     double globalAngle, power = .60, correction;
 
     // Create static variables
+    //static final double DRIVE_GEAR_REDUCTION = 0.705;    // 60:1 Gear ratio
+    static final double DRIVE_GEAR_REDUCTION = 0.475;    // 40:1. This is < 1.0 if geared UP
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 0.705;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double DRIVE_SPEED = 0.7;
+    static final double DRIVE_SPEED = 0.6;
     static final double MOVE_FOUNDATION_SPEED = 0.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.14159);
+                                          (WHEEL_DIAMETER_INCHES * 3.14159);
 
     String direction = "";
     String direction_reverse = "";
     int lane_distance = 0;
-    boolean move_foundation = (moveFoundation == "Yes") ? true : false;
+    boolean move_foundation = ( moveFoundation == "Yes" ) ? true : false;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
         /*
          * Initialize the drive system variables.
@@ -86,12 +85,17 @@ public class AutoFoundationSide extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Version", "0.2");
-        telemetry.addData("Path0", "Starting at %7d :%7d",
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.lf.getCurrentPosition(),
                 robot.rf.getCurrentPosition());
         telemetry.update();
 
-        telemetry.addData("Mode", "waiting for start");
+        telemetry.addData("Status", "Initialized - Waiting for start");
+        telemetry.addData("", "");
+        telemetry.addData("Setup for", "");
+        telemetry.addData("  Alliance", alliance);
+        telemetry.addData("  Move Foundation", moveFoundation);
+        telemetry.addData("  Parking Side", parkingLane);
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -101,11 +105,11 @@ public class AutoFoundationSide extends LinearOpMode {
         // Path: Launch from Depot side
 
         /* encoderDrive parameters (power, direction, distance, timeout)
-         *                Power:  0.0 to 1.0
-         *    Direction options:  "left", "right", "forward" or "backward"
-         *     Distance options:  inches
-         *              Timeout:  decimal number in seconds
-         */
+        *                Power:  0.0 to 1.0
+        *    Direction options:  "left", "right", "forward" or "backward"
+        *     Distance options:  inches
+        *              Timeout:  decimal number in seconds
+        */
 
         // Set direction variables based on alliance color selection during init
         /* If Blue alliance:
@@ -115,28 +119,31 @@ public class AutoFoundationSide extends LinearOpMode {
          *      - direction = backward
          *      - reverse_direction = forward
          */
-        direction = (alliance == "Blue") ? "forward" : "backward";
-        direction_reverse = (alliance == "Blue") ? "backward" : "forward";
+        direction = (alliance == "Blue") ? "forward": "backward";
+        direction_reverse = (alliance == "Blue") ? "backward": "forward";
         // Set variable base on init selection controlling if foundation gets moved or not
 
-        /* *********************************************** *
-         *   Autonomous Actions: Build (Foundation) Side   *
-         * *********************************************** */
+/* *********************************************** *
+ *   Autonomous Actions: Build (Foundation) Side   *
+ * *********************************************** */
 
-        if (move_foundation) {
+        if ( move_foundation ) {
             // ACTION 1:
             // Drive: Start moving to foundation
-            encoderDrive(DRIVE_SPEED, "right", 16, 3.5);
+            encoderDrive(DRIVE_SPEED, "right", 16, 4.5);
             sleep(100);
 
             // ACTION 2:
             // Drive: Center on foundation
-            encoderDrive(DRIVE_SPEED, direction, 11, 5);
+            double distance = 13.5;
+            double blue_offset = 3.5;
+            if (alliance == "Blue") { distance = distance - blue_offset; }
+            encoderDrive(DRIVE_SPEED, direction, distance, 4.5);
             sleep(100);
 
             // ACTION 3:
             // Drive: Drive to foundation
-            encoderDrive(DRIVE_SPEED, "right", 19.5, 6);
+            encoderDrive(DRIVE_SPEED, "right", 18.5, 6);
             sleep(250);
 
             // ACTION 4:
@@ -146,7 +153,7 @@ public class AutoFoundationSide extends LinearOpMode {
 
             // ACTION 5:
             // Drive: Pull foundation to wall
-            encoderDrive(MOVE_FOUNDATION_SPEED, "left", 45, 9);
+            encoderDrive(MOVE_FOUNDATION_SPEED, "left", 47, 9);
             sleep(100);
 
             // ACTION 6:
@@ -155,8 +162,10 @@ public class AutoFoundationSide extends LinearOpMode {
             sleep(100);
 
             // ACTION 7:
-            // Drive: Park on line under bridge
-            encoderDrive(DRIVE_SPEED, direction_reverse, 30, 5);
+            // Drive: Move towards bridge to get past foundation
+            distance = 35;
+            if (alliance == "Blue") { distance = distance - blue_offset; }
+            encoderDrive(DRIVE_SPEED, direction_reverse, distance, 5);
             sleep(100);
 
             // ACTION 8:
@@ -166,37 +175,33 @@ public class AutoFoundationSide extends LinearOpMode {
             sleep(100);
 
             // ACTION 9:
-            // Drive: Park on line in lane 2
-            encoderDrive(DRIVE_SPEED, direction_reverse, 22, 5);
+            // Drive: Park on line under bridge
+            encoderDrive(DRIVE_SPEED, direction_reverse, 16, 5);
             sleep(100);
 
             telemetry.addData("Autonomous Path", "Complete");
             telemetry.update();
-
-            sleep(15000);   // Sleep to keep ramp up for most of Autonomous
-
         } else {
             // Do not move foundation, only park in selected lane
 
             // ACTION 1:
             // Drive: Align with selected lane to park in
-            lane_distance = (parkingLane == "Outside") ? 3 : 27;
+            lane_distance = (parkingLane == "Outside") ? 5 : 27;
             encoderDrive(DRIVE_SPEED, "right", lane_distance, 6);
             sleep(100);
 
             // ACTION 2:
             // Drive: Park on line under bridge
-            encoderDrive(DRIVE_SPEED, direction_reverse, 38, 9);
+            int distance = 36;
+            if (alliance == "Blue") { distance = distance - 3; }
+            encoderDrive(DRIVE_SPEED, direction_reverse, distance, 9);
             sleep(100);
 
             telemetry.addData("Autonomous Path", "Complete");
             telemetry.update();
-
-            sleep(20000);   // Sleep to keep ramp up for most of Autonomous
         }
 
         // End autonomous actions here
-
     }
 
     public void encoderDrive(double speed, String direction,
@@ -208,10 +213,10 @@ public class AutoFoundationSide extends LinearOpMode {
         int newLeftRearTarget;
         int newRightRearTarget;
 
-        int lfDirection = 0;
-        int rfDirection = 0;
-        int lrDirection = 0;
-        int rrDirection = 0;
+        int lfDirection=0;
+        int rfDirection=0;
+        int lrDirection=0;
+        int rrDirection=0;
 
         double cpiCompensation = 1;
 
@@ -254,7 +259,7 @@ public class AutoFoundationSide extends LinearOpMode {
             telemetry.addData("Inches", inches);
             telemetry.addData("Tics/inch", CPI);
             telemetry.addData("Direction", "%12s", direction);
-            telemetry.addData("Path", "Running at %7d :%7d",
+            telemetry.addData("Path",  "Running at %7d :%7d",
                     robot.lf.getCurrentPosition(),
                     robot.rf.getCurrentPosition());
             telemetry.update();
@@ -262,10 +267,10 @@ public class AutoFoundationSide extends LinearOpMode {
 //sleep(2000);    // Testing: Allows time to read telemetry
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int) (inches * CPI * lfDirection);
-            newRightFrontTarget = robot.rf.getCurrentPosition() + (int) (inches * CPI * rfDirection);
-            newLeftRearTarget = robot.lr.getCurrentPosition() + (int) (inches * CPI * lrDirection);
-            newRightRearTarget = robot.rr.getCurrentPosition() + (int) (inches * CPI * rrDirection);
+            newLeftFrontTarget = robot.lf.getCurrentPosition() + (int)(inches * CPI * lfDirection);
+            newRightFrontTarget = robot.rf.getCurrentPosition() + (int)(inches * CPI * rfDirection);
+            newLeftRearTarget = robot.lr.getCurrentPosition() + (int)(inches * CPI * lrDirection);
+            newRightRearTarget = robot.rr.getCurrentPosition() + (int)(inches * CPI * rrDirection);
             robot.lf.setTargetPosition(newLeftFrontTarget);
             robot.rf.setTargetPosition(newRightFrontTarget);
             robot.lr.setTargetPosition(newLeftRearTarget);
@@ -294,17 +299,17 @@ public class AutoFoundationSide extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.lf.isBusy() && robot.rf.isBusy() &&
-                            robot.lr.isBusy() && robot.rr.isBusy())) {
+                     robot.lr.isBusy() && robot.rr.isBusy() )) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
+                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftFrontTarget,  newRightFrontTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d",
                         robot.lf.getCurrentPosition(),
                         robot.rf.getCurrentPosition());
                 telemetry.addData("isBusy:", "lf: %3b  rf: %3b  lr: %3b  rr: %3b",
                         robot.lf.isBusy(), robot.rf.isBusy(),
-                        robot.lr.isBusy(), robot.rr.isBusy());
-                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds());
+                        robot.lr.isBusy(), robot.rr.isBusy() );
+                telemetry.addData("Timers: ", "Timeout: %4f, Timer: %4f", timeoutS, runtime.seconds() );
                 telemetry.update();
             }
 
