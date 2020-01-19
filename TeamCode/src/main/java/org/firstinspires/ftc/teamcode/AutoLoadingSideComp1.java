@@ -17,11 +17,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "Auto - Loading Side")
+// Used on for first 2019-20 Comp - Lakeville, MN
+
+@Autonomous(name = "Auto - Loading Side Comp1")
 
 // @Disabled
 
-public class AutoLoadingSide extends LinearOpMode {
+public class AutoLoadingSideComp1 extends LinearOpMode {
 
     /*  ***************************************** *
      *  ***************************************** *
