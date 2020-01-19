@@ -3,6 +3,11 @@ package org.firstinspires.ftc.teamcode;
 // Based on TeamCode/src/main/java/org/firstinspires/ftc/teamcode/HardwarePushbot_BucketBrigade.java
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
 import java.util.Set;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -43,7 +48,6 @@ public class TeleOpCompHWMain {
     public DcMotor intakeRight = null;
     public DcMotor liftMotor = null;
 
-
     /* Servos */
     public Servo servoFoundation;
     public Servo servoStoneArm;
@@ -51,13 +55,18 @@ public class TeleOpCompHWMain {
     public Servo pivotServo;
     public Servo handServo;
 
+    /* Sensors */
+    DigitalChannel magLimit;  // Magnetic limit switch on lift
+    public NormalizedColorSensor colorSensorPrimary;    // Color Sensor 1
+    public NormalizedColorSensor colorSensorSecondary;  // Color Sensor 2
+    public DistanceSensor distanceSensorPrimary;        // Distance sensor on color sensor
+
     /* local OpMode members. */
     HardwareMap hwMap           = null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
     public TeleOpCompHWMain(){
-
     }
 
     /* Initialize standard Hardware interfaces */
@@ -119,16 +128,29 @@ public class TeleOpCompHWMain {
         // Servo to control stone capture arm - init to raised position
         // Lower position numbers raise arm farther
         servoStoneArm = hwMap.servo.get("stone_arm_servo");
-        servoStoneArm.setPosition(0.47);
+        servoStoneArm.setPosition(0.0);
 
         //Servo to place capstone on foundation
         capstoneServo = hwMap.servo.get("capstone_servo");
-        capstoneServo.setPosition(0.2);
+        //capstoneServo.setPosition(0.2);
 
         //Smart Servo for rack and pinion arm
         pivotServo = hwMap.servo.get("pivot_servo");
-        pivotServo.setPosition(0.0);
+        pivotServo.setPosition(1.0);
         handServo = hwMap.servo.get("hand_servo");
-        handServo.setPosition(0.0);
+        handServo.setPosition(1.0);
+
+        // Color sensors
+        colorSensorPrimary = hwMap.get(NormalizedColorSensor.class, "color_sensor1");
+        colorSensorSecondary = hwMap.get(NormalizedColorSensor.class, "color_sensor2");
+
+        // Distance sensors
+        distanceSensorPrimary = hwMap.get(DistanceSensor.class, "color_sensor1");
+
+        // Magnetic limit sensor
+        magLimit = hwMap.get(DigitalChannel.class, "mag_limit");
+
+        // set the digital channel to input.
+        magLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 }
